@@ -1,7 +1,8 @@
 from pico2d import *
 import game_framework
-# import item_state
 
+
+# import item_state
 
 
 class Map:
@@ -14,16 +15,32 @@ class Map:
 
 class Skul:
     def __init__(self):
-        self.x, self.y = 10, 80
+        self.x, self.y = 50, 80
         self.frame = 0
-        self.dir = 0
+        self.dirx = 0
+        self.diry = 0
         self.image = load_image('skulwalk2.png')
+        self.idle_image = load_image('skulidle2.png')
         self.item = None
 
     def update(self):
+        global jumped
         self.frame = (self.frame + 1) % 8
-        self.x += self.dir * 1
-        print(self.x)
+        self.x += self.dirx * 1
+        if jumped:
+            self.diry = 20
+            if self.y >= 260:
+                jumped = False
+                self.diry = -20
+        if not jumped:
+            if self.y <= 80:  # 나중에 현재위치에 맞게 바꿔줘야함
+                self.diry = 0
+            print(self.y)
+        self.y += self.diry * 1
+        delay(0.025)
+
+        # print(self.y)
+        # print(self.diry)
         # if self.x > 800:
         #     self.x = 800
         #     self.dir = -1  # 왼쪽
@@ -33,7 +50,11 @@ class Skul:
 
     def draw(self):
         if L == 0 and R == 0:
-            self.image.clip_draw(self.frame * 73, 62, 70, 60, self.x, self.y)
+            self.idle_image.clip_draw((self.frame//2) * 77, 60, 72, 60, self.x, self.y)
+        elif idle == 1 and R == 1:
+            self.idle_image.clip_draw((self.frame // 2) * 77, 60, 72, 60, self.x, self.y)
+        elif idle == 1 and L == 1:
+            self.idle_image.clip_draw((self.frame // 2) * 77, 0, 72, 60, self.x, self.y)
         elif R == 1:
             self.image.clip_draw(self.frame * 73, 62, 70, 60, self.x, self.y)
         elif L == 1:
@@ -47,11 +68,14 @@ class Skul:
 
 L = 0
 R = 0
+ilde = 1
+jumped = False
 
 
 def handle_events():
     global running
-    global L, R
+    global L, R, idle
+    global jumped
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -60,22 +84,29 @@ def handle_events():
             if event.key == SDLK_ESCAPE:
                 game_framework.quit()
             elif event.key == SDLK_RIGHT:
-                skul.dir += 1
+                skul.dirx += 20
                 R = 1
                 L = 0
+                idle = 0
             elif event.key == SDLK_LEFT:
-                skul.dir -= 1
+                skul.dirx -= 20
                 L = 1
                 R = 0
+                idle = 0
+            elif event.key == SDLK_SPACE:
+                jumped = True
+
         elif event.type == SDL_KEYUP:
             if event.key == SDLK_RIGHT:
-                skul.dir -= 1
+                skul.dirx -= 20
                 R = 1
                 L = 0
+                idle = 1
             elif event.key == SDLK_LEFT:
-                skul.dir += 1
+                skul.dirx += 20
                 R = 0
                 L = 1
+                idle = 1
 
 
 skul = None
