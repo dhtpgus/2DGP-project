@@ -7,15 +7,15 @@ import game_framework
 
 class Map:
     def __init__(self):
-        self.image = load_image('grass.png')
+        self.image = load_image('skul_map1.png')
 
     def draw(self):
-        self.image.draw(400, 30)
+        self.image.draw(1280 // 2,  720 // 2)
 
 
 class Skul:
     def __init__(self):
-        self.x, self.y = 50, 80
+        self.x, self.y = 300, 200
         self.frame = 0
         self.dirx = 0
         self.diry = 0
@@ -29,11 +29,11 @@ class Skul:
         self.x += self.dirx * 1
         if jumped:
             self.diry = 20
-            if self.y >= 260:
+            if self.y >= 380:
                 jumped = False
                 self.diry = -20
         if not jumped:
-            if self.y <= 80:  # 나중에 현재위치에 맞게 바꿔줘야함
+            if self.y <= 200:  # 나중에 현재위치에 맞게 바꿔줘야함
                 self.diry = 0
             print(self.y)
         self.y += self.diry * 1
@@ -50,11 +50,11 @@ class Skul:
 
     def draw(self):
         if L == 0 and R == 0:
-            self.idle_image.clip_draw((self.frame//2) * 77, 60, 72, 60, self.x, self.y)
+            self.idle_image.clip_draw((self.frame // 2) * 77, 60, 72, 60, self.x, self.y-2, 66, 55)
         elif idle == 1 and R == 1:
-            self.idle_image.clip_draw((self.frame // 2) * 77, 60, 72, 60, self.x, self.y)
+            self.idle_image.clip_draw((self.frame // 2) * 77, 60, 72, 60, self.x, self.y-2, 66, 55)
         elif idle == 1 and L == 1:
-            self.idle_image.clip_draw((self.frame // 2) * 77, 0, 72, 60, self.x, self.y)
+            self.idle_image.clip_draw((self.frame // 2) * 77, 0, 72, 60, self.x, self.y, 66, 55)
         elif R == 1:
             self.image.clip_draw(self.frame * 73, 62, 70, 60, self.x, self.y)
         elif L == 1:
