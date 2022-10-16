@@ -21,36 +21,39 @@ class Skul:
         self.diry = 0
         self.image = load_image('skulwalk2.png')
         self.idle_image = load_image('skulidle2.png')
+        self.jump_image = load_image('skuljump2.png')
+        self.falling_image = load_image('skulfall2.png')
         self.item = None
 
     def update(self):
-        global jumped
+        global jumped, falling
         self.frame = (self.frame + 1) % 8
         self.x += self.dirx * 1
         if jumped:
             self.diry = 20
-            if self.y >= 380:
+            if self.y >= 400:
                 jumped = False
+                falling = True
                 self.diry = -20
         if not jumped:
             if self.y <= 200:  # 나중에 현재위치에 맞게 바꿔줘야함
                 self.diry = 0
+                falling = False
             print(self.y)
         self.y += self.diry * 1
         delay(0.025)
 
-        # print(self.y)
-        # print(self.diry)
-        # if self.x > 800:
-        #     self.x = 800
-        #     self.dir = -1  # 왼쪽
-        # elif self.x < 0:
-        #     self.x = 0
-        #     self.dir = 1
-
     def draw(self):
         if L == 0 and R == 0:
             self.idle_image.clip_draw((self.frame // 2) * 77, 60, 72, 60, self.x, self.y-2, 66, 55)
+        elif jumped and R == 1:
+            self.jump_image.clip_draw((self.frame // 4) * 40, 0, 40, 61, self.x, self.y - 2)
+        elif jumped and L == 1:
+            self.jump_image.clip_draw((self.frame // 4) * 40, 60, 40, 61, self.x, self.y - 2)
+        elif falling and R == 1:
+            self.falling_image.clip_draw((self.frame // 4) * 67, 0, 67, 60, self.x, self.y - 2)
+        elif falling and L == 1:
+            self.falling_image.clip_draw((self.frame // 4) * 67, 60, 67, 60, self.x, self.y - 2)
         elif idle == 1 and R == 1:
             self.idle_image.clip_draw((self.frame // 2) * 77, 60, 72, 60, self.x, self.y-2, 66, 55)
         elif idle == 1 and L == 1:
@@ -60,16 +63,13 @@ class Skul:
         elif L == 1:
             self.image.clip_draw(self.frame * 73, 0, 70, 60, self.x, self.y)
 
-        # if self.dir == 1:
-        #     self.image.clip_draw(self.frame * 73, 62, 70, 60, self.x, self.y)
-        # else:
-        #     self.image.clip_draw(self.frame * 73, 0, 70, 60, self.x, self.y)
 
 
 L = 0
 R = 0
 ilde = 1
 jumped = False
+falling = False
 
 
 def handle_events():
