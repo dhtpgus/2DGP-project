@@ -1,6 +1,6 @@
 from pico2d import *
 import game_framework
-
+import chdir
 
 # import item_state
 
@@ -31,8 +31,6 @@ class enemy:  # 잡몹은 y방향 이동없음
         global sense_range, enemy_attack
         self.frame = (self.frame + 1) % 8
         self.x += self.dirx * 1
-        if enemy_attack:
-
 
     def draw(self):
         self.image.clip_draw((self.frame // 2) * 77, 60, 72, 60, self.x, self.y - 2, 66, 55)
