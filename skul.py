@@ -3,7 +3,7 @@ import chdir
 import game_world
 
 RD, LD, RU, LU, TIMER, SPACE, XD, XU = range(8)
-event_name = ['RD', 'LD', 'RU', 'LU', 'TIMER', 'SPACE', 'FALL']
+event_name = ['RD', 'LD', 'RU', 'LU', 'TIMER', 'SPACE', 'XD', 'XU']
 key_event_table = {
     (SDL_KEYDOWN, SDLK_x): XD,
     (SDL_KEYUP, SDLK_x): XU,
@@ -137,9 +137,6 @@ class RUN:
             self.image.clip_draw(self.frame * 73, 62, 70, 60, self.x, self.y)
 
 
-# L = 0
-# R = 0
-# ilde = 1
 jumped = False
 falling = False
 attack = False
@@ -149,19 +146,13 @@ attackL_images = []
 next_state = {
     IDLE: {RU: RUN, LU: RUN, RD: RUN, LD: RUN},
     RUN: {RU: IDLE, LU: IDLE, RD: IDLE, LD: IDLE}
-    # JUMP: {RU: JUMP, LU: JUMP, RD: JUMP, LD: JUMP, SPACE: JUMP, TIMER: IDLE}
-    # FALL: {RU: FALL, LU: FALL, RD: FALL, LD: FALL, TIMER: RUN}
 }
-
 
 class Skul:
     def __init__(self):
-        global attackR_images
         self.x, self.y = 300, 200
         self.frame = 0
         self.dir, self.face_dir = 0, 1
-        # self.dirx = 0
-        # self.diry = 0
         self.event_que = []
         self.cur_state = IDLE
         self.cur_state.enter(self, None)
@@ -200,21 +191,6 @@ class Skul:
                 # print('ERROR', self.cur_state, 'Event', event_name[event])
                 # print(f'ERROR: State {self.cur_state.__name__}  Event {event_name[event]}')
             self.cur_state.enter(self, event)
-        # global jumped, falling, attack, idle
-        # self.frame = (self.frame + 1) % 8
-        # self.x += self.dirx * 1
-        # if jumped:
-        #     self.diry = 20
-        #     if self.y >= 400:
-        #         jumped = False
-        #         falling = True
-        #         self.diry = -20
-        # if not jumped:
-        #     if self.y <= 200:  # 나중에 현재위치에 맞게 바꿔줘야함
-        #         self.diry = 0
-        #         falling = False
-        # self.y += self.diry * 1
-        # delay(0.025)
 
     def draw(self):
         self.cur_state.draw(self)
@@ -250,34 +226,3 @@ class Skul:
         if (event.type, event.key) in key_event_table:
             key_event = key_event_table[(event.type, event.key)]
             self.add_event(key_event)
-        # global running
-        # global L, R, idle
-        # global jumped, attack
-        # if event.type == SDL_KEYDOWN:
-        #     if event.key == SDLK_RIGHT:
-        #         self.dirx += 20
-        #         R = 1
-        #         L = 0
-        #         idle = 0
-        #     elif event.key == SDLK_LEFT:
-        #         self.dirx -= 20
-        #         L = 1
-        #         R = 0
-        #         idle = 0
-        #     elif event.key == SDLK_SPACE:
-        #         jumped = True
-        #     elif event.key == SDLK_x:
-        #         attack = True
-        # elif event.type == SDL_KEYUP:
-        #     if event.key == SDLK_RIGHT:
-        #         self.dirx -= 20
-        #         R = 1
-        #         L = 0
-        #         idle = 1
-        #     elif event.key == SDLK_LEFT:
-        #         self.dirx += 20
-        #         R = 0
-        #         L = 1
-        #         idle = 1
-        #     elif event.key == SDLK_x:
-        #         attack = False

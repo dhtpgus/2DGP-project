@@ -3,6 +3,7 @@ import game_framework
 import chdir
 from skul import Skul
 from map import Map
+from enemy import Enemy
 import game_world
 
 
@@ -10,7 +11,7 @@ import game_world
 
 skul = None
 map = None
-
+enemy = None
 
 def handle_events():
     events = get_events()
@@ -24,11 +25,14 @@ def handle_events():
 
 
 def enter():
-    global skul, map
+    global skul, map, enemy
     skul = Skul()
     map = Map()
+    enemy = Enemy()
     game_world.add_object(map, 0)
-    game_world.add_object(skul, 1)
+    game_world.add_object(enemy, 1)
+    game_world.add_object(skul, 2)
+
 
 
 # finalization code
