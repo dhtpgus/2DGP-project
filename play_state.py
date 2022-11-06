@@ -3,17 +3,16 @@ import game_framework
 import chdir
 from skul import Skul
 from map import Map
+import game_world
 
 
 # import item_state
 
 skul = None
 map = None
-running = True
 
 
 def handle_events():
-    global running
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -25,32 +24,30 @@ def handle_events():
 
 
 def enter():
-    global skul, map, running
+    global skul, map
     skul = Skul()
     map = Map()
-    running = True
+    game_world.add_object(map, 0)
+    game_world.add_object(skul, 1)
 
 
 # finalization code
 def exit():
-    global skul, map
-    del skul
-    del map
+   game_world.clear()
 
 
 def update():
-    skul.update()
+    for game_object in game_world.all_objects():
+        game_object.update()
 
+def draw_world():
+    for game_object in game_world.all_objects():
+        game_object.draw()
 
 def draw():
     clear_canvas()
     draw_world()
     update_canvas()
-
-
-def draw_world():
-    map.draw()
-    skul.draw()
 
 
 def pause():
