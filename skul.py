@@ -1,6 +1,7 @@
 from pico2d import *
 import chdir
 import game_world
+import game_framework
 
 RD, LD, RU, LU, TIMER, SPACE, XD, XU = range(8)
 event_name = ['RD', 'LD', 'RU', 'LU', 'TIMER', 'SPACE', 'XD', 'XU']
@@ -38,7 +39,7 @@ class IDLE:
     @staticmethod
     def do(self):
         global jumped, falling
-        self.frame = (self.frame + 1) % 8
+        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
         if jumped:
             self.diry = 2
             if self.y >= 400:
@@ -58,22 +59,31 @@ class IDLE:
     @staticmethod
     def draw(self):
         if attack and self.face_dir == -1:
-            attackL_images[self.frame].draw(self.x, self.y)
+            attackL_images[int(self.frame)].draw(self.x, self.y)
         elif attack and self.face_dir == 1:
-            attackR_images[self.frame].draw(self.x, self.y)
+            attackR_images[int(self.frame)].draw(self.x, self.y)
         elif jumped and self.face_dir == -1:
-            self.jump_image.clip_draw((self.frame // 4) * 40, 60, 40, 61, self.x, self.y - 2)
+            self.jump_image.clip_draw((int(self.frame) // 4) * 40, 60, 40, 61, self.x, self.y - 2)
         elif jumped and self.face_dir == 1:
-            self.jump_image.clip_draw((self.frame // 4) * 40, 0, 40, 61, self.x, self.y - 2)
+            self.jump_image.clip_draw((int(self.frame) // 4) * 40, 0, 40, 61, self.x, self.y - 2)
         elif falling and self.face_dir == -1:
-            self.falling_image.clip_draw((self.frame // 4) * 67, 60, 67, 60, self.x, self.y - 2)
+            self.falling_image.clip_draw((int(self.frame) // 4) * 67, 60, 67, 60, self.x, self.y - 2)
         elif falling and self.face_dir == 1:
-            self.falling_image.clip_draw((self.frame // 4) * 67, 0, 67, 60, self.x, self.y - 2)
+            self.falling_image.clip_draw((int(self.frame) // 4) * 67, 0, 67, 60, self.x, self.y - 2)
         elif self.face_dir == 1:
-            self.idle_image.clip_draw((self.frame // 2) * 77, 60, 72, 60, self.x, self.y - 2, 66, 55)
+            self.idle_image.clip_draw((int(self.frame) // 2) * 77, 60, 72, 60, self.x, self.y - 2, 66, 55)
         else:
-            self.idle_image.clip_draw((self.frame // 2) * 77, 0, 72, 60, self.x, self.y, 66, 55)
+            self.idle_image.clip_draw((int(self.frame) // 2) * 77, 0, 72, 60, self.x, self.y, 66, 55)
 
+PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel이 30cm
+RUN_SPEED_KMPH = 40.0  # km / Hour
+RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
+RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
+RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
+
+TIME_PER_ACTION = 0.5
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+FRAMES_PER_ACTION = 8
 
 class RUN:
     def enter(self, event):
@@ -103,7 +113,7 @@ class RUN:
     def do(self):
         global jumped, falling
         self.face_dir = self.dir
-        self.frame = (self.frame + 1) % 8
+        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
         if jumped:
             self.diry = 2
             if self.y >= 400:
@@ -114,27 +124,27 @@ class RUN:
             if self.y <= 200:  # 나중에 현재위치에 맞게 바꿔줘야함
                 self.diry = 0
                 falling = False
-        self.y += self.diry * 1
-        self.x += self.dir
+        self.y += self.diry * RUN_SPEED_PPS * game_framework.frame_time
+        self.x += self.dir * RUN_SPEED_PPS * game_framework.frame_time
         self.x = clamp(0, self.x, 1200)
 
     def draw(self):
         if attack and self.face_dir == -1:
-            attackL_images[self.frame].draw(self.x, self.y)
+            attackL_images[int(self.frame)].draw(self.x, self.y)
         elif attack and self.face_dir == 1:
-            attackR_images[self.frame].draw(self.x, self.y)
+            attackR_images[int(self.frame)].draw(self.x, self.y)
         elif jumped and self.face_dir == -1:
-            self.jump_image.clip_draw((self.frame // 4) * 40, 60, 40, 61, self.x, self.y - 2)
+            self.jump_image.clip_draw((int(self.frame) // 4) * 40, 60, 40, 61, self.x, self.y - 2)
         elif jumped and self.face_dir == 1:
-            self.jump_image.clip_draw((self.frame // 4) * 40, 0, 40, 61, self.x, self.y - 2)
+            self.jump_image.clip_draw((int(self.frame) // 4) * 40, 0, 40, 61, self.x, self.y - 2)
         elif falling and self.face_dir == -1:
-            self.falling_image.clip_draw((self.frame // 4) * 67, 60, 67, 60, self.x, self.y - 2)
+            self.falling_image.clip_draw((int(self.frame) // 4) * 67, 60, 67, 60, self.x, self.y - 2)
         elif falling and self.face_dir == 1:
-            self.falling_image.clip_draw((self.frame // 4) * 67, 0, 67, 60, self.x, self.y - 2)
+            self.falling_image.clip_draw((int(self.frame) // 4) * 67, 0, 67, 60, self.x, self.y - 2)
         elif self.dir == -1:
-            self.image.clip_draw(self.frame * 73, 0, 70, 60, self.x, self.y)
+            self.image.clip_draw(int(self.frame) * 73, 0, 70, 60, self.x, self.y)
         elif self.dir == 1:
-            self.image.clip_draw(self.frame * 73, 62, 70, 60, self.x, self.y)
+            self.image.clip_draw(int(self.frame) * 73, 62, 70, 60, self.x, self.y)
 
 
 jumped = False
