@@ -40,9 +40,6 @@ def enter():
     game_world.add_object(map, 0)
     game_world.add_object(skul, 1)
 
-    game_world.add_collision_pairs(skul, enemy, 'skul:enemy')
-    game_world.add_collision_pairs(attack, enemy, 'skul_attack:enemy')
-
 
 
 # finalization code
