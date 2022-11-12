@@ -1,4 +1,3 @@
-# fill here
 import pico2d
 import game_framework
 import stage_middle
