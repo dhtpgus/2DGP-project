@@ -25,8 +25,10 @@ class IDLE:
             jumped = True
         elif event == XD:
             attack = True
+            # game_world.add_object(skul_attack, 0)
         elif event == XU:
             attack = False
+            # game_world.remove_object(attack)
         self.dir = 0
         self.timer = 100
 
@@ -75,6 +77,7 @@ class IDLE:
         else:
             self.idle_image.clip_draw((int(self.frame) // 2) * 77, 0, 72, 60, self.x, self.y, 66, 55)
 
+
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel이 30cm
 RUN_SPEED_KMPH = 40.0  # km / Hour
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
@@ -84,6 +87,7 @@ RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
+
 
 class RUN:
     def enter(self, event):
@@ -146,7 +150,6 @@ class RUN:
         elif self.dir == 1:
             self.image.clip_draw(int(self.frame) * 73, 62, 70, 60, self.x, self.y)
 
-
 jumped = False
 falling = False
 attack = False
@@ -157,6 +160,7 @@ next_state = {
     IDLE: {RU: RUN, LU: RUN, RD: RUN, LD: RUN},
     RUN: {RU: IDLE, LU: IDLE, RD: IDLE, LD: IDLE}
 }
+
 
 class Skul:
     def __init__(self):
@@ -189,7 +193,7 @@ class Skul:
 
         self.item = None
 
-    def update(self, event_name=None):
+    def update(self):
         self.cur_state.do(self)
         if self.event_que:
             event = self.event_que.pop()
@@ -204,6 +208,10 @@ class Skul:
 
     def draw(self):
         self.cur_state.draw(self)
+        draw_rectangle(*self.get_bb())  # tuple 값을 나눠서 인자로 분배하기위해 * 을 사용
+        if attack:
+            draw_rectangle(*self.get_attack_bb())
+
         # if L == 0 and R == 0:
         #     self.idle_image.clip_draw((self.frame // 2) * 77, 60, 72, 60, self.x, self.y - 2, 66, 55)
         # elif attack and R == 1:
@@ -236,3 +244,16 @@ class Skul:
         if (event.type, event.key) in key_event_table:
             key_event = key_event_table[(event.type, event.key)]
             self.add_event(key_event)
+
+    def get_bb(self):
+        return self.x - 33, self.y - 30, self.x + 30, self.y + 30
+
+    def get_attack_bb(self):
+        if attack and self.face_dir == 1:
+            return self.x - 47, self.y - 40, self.x + 50, self.y + 47
+        elif attack and self.face_dir == -1:
+            return self.x - 50, self.y - 40, self.x + 47, self.y + 47
+        pass
+
+    def handle_collision(self, other, group):
+        pass

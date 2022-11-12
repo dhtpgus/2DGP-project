@@ -1,6 +1,6 @@
 from pico2d import *
 import game_framework
-import play_state
+import title_state
 
 image = None
 
@@ -23,8 +23,8 @@ def update():
 
 def draw():
     clear_canvas()
-    play_state.draw_world()
-    image.draw(400, 300)
+    cur_state.draw_world()
+    image.draw(1280 // 2, 720 // 2)
     update_canvas()
     pass
 
@@ -37,6 +37,8 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN:
             match event.key:
+                case pico2d.SDLK_p:
+                    game_framework.pop_state()
                 case pico2d.SDLK_ESCAPE:
                     game_framework.pop_state()
 

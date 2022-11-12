@@ -1,7 +1,8 @@
 from pico2d import *
 # from skul import Skul
 import skul
-import play_state
+import stage_middle
+import game_world
 
 
 
@@ -38,6 +39,14 @@ class Enemy:  # 잡몹은 y방향 이동없음
 
     def draw(self):
         self.image.draw(self.x, self.y, 48, 72)
+        draw_rectangle(*self.get_bb())
 
     def handle_events(self):
         pass
+
+    def get_bb(self):
+        return self.x - 25, self.y - 35, self.x + 25, self.y + 35
+
+    def handle_collision(self, other, group):
+        if group == 'skul_attack:enemy':
+            game_world.remove_object(self)
