@@ -3,6 +3,7 @@ from pico2d import *
 import skul
 import stage_middle
 import game_world
+import server
 
 
 
@@ -13,8 +14,8 @@ turn_R = True
 # 그리고 attack_range범위안에 플레이어가 들어오면 플레이어를 공격한다.
 class Enemy:  # 잡몹은 y방향 이동없음
     def __init__(self):
-        self.startx, self.starty = 900, 210
-        self.x, self.y = 900, 210
+        self.startx, self.starty = 1500, 215
+        self.x, self.y = 1500, 215
         self.sense_range = 100
         self.frame = 0
         self.dirx = 0
@@ -38,14 +39,19 @@ class Enemy:  # 잡몹은 y방향 이동없음
             self.x += 1
 
     def draw(self):
-        self.image.draw(self.x, self.y, 48, 72)
+        cx = self.x - server.map.window_left
+        if turn_L:
+            self.image.clip_composite_draw(0, 0, 60, 90, 0, 'h', cx, self.y)
+        else:
+            self.image.clip_composite_draw(0, 0, 60, 90, 0, ' ', cx, self.y)
         draw_rectangle(*self.get_bb())
 
     def handle_events(self):
         pass
 
     def get_bb(self):
-        return self.x - 25, self.y - 35, self.x + 25, self.y + 35
+        cx = self.x - server.map.window_left
+        return cx - 30, self.y - 45, cx + 30, self.y + 45
 
     def handle_collision(self, other, group):
         if group == 'skul_attack:enemy':

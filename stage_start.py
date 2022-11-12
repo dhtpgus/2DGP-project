@@ -3,17 +3,19 @@ import game_framework
 import chdir
 from skul import Skul
 from skul import attack
-from map import Map
+import map
 from enemy import Enemy
 import game_world
 import title_state
 import item_state
 import stage_middle
+import server
+from gate import Gate1, Gate2
 
 
-skul = None
-map = None
-enemy = None
+gate1 = None
+gate2 = None
+
 
 def handle_events():
     events = get_events()
@@ -27,23 +29,26 @@ def handle_events():
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_f):
             game_framework.change_state(stage_middle)
         else:
-            skul.handle_event(event)
+            server.skul.handle_event(event)
 
 
 def enter():
-    global skul, map, enemy
-    skul = Skul()
-    map = Map()
-    enemy = Enemy()
-    game_world.add_object(map, 0)
-    game_world.add_object(skul, 1)
+    global gate1, gate2
+    server.skul = Skul()
+    server.map = map.startMap()
+    server.enemy = Enemy()
+    gate1 = Gate1()
+    gate2 = Gate2()
 
-
+    game_world.add_object(server.map, 0)
+    game_world.add_object(server.skul, 1)
+    game_world.add_object(gate1, 1)
+    game_world.add_object(gate2, 1)
 
 
 # finalization code
 def exit():
-   game_world.clear()
+    game_world.clear()
 
 
 def update():
@@ -56,9 +61,11 @@ def update():
                 a.handle_collision(b, group)  # 누가와서 충돌했는지, 어떤 관계인지정보를 알려주고 객체가 알아서 처리하도록하자
                 b.handle_collision(a, group)
 
+
 def draw_world():
     for game_object in game_world.all_objects():
         game_object.draw()
+
 
 def draw():
     clear_canvas()
@@ -72,6 +79,7 @@ def pause():
 
 def resume():
     pass
+
 
 def collide(a, b):
     if a == attack:

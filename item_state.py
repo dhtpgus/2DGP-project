@@ -1,13 +1,13 @@
 from pico2d import *
 import game_framework
 import title_state
+import server
 
 image = None
 
-
 def enter():
     global image
-    image = load_image('item_select.png')
+    image = load_image('pause.png')
     pass
 
 
@@ -23,7 +23,7 @@ def update():
 
 def draw():
     clear_canvas()
-    cur_state.draw_world()
+    server.stage.draw_world()
     image.draw(1280 // 2, 720 // 2)
     update_canvas()
     pass

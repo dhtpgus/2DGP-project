@@ -3,18 +3,16 @@ import game_framework
 import chdir
 from skul import Skul
 from skul import attack
-from map import Map
+import map
 from enemy import Enemy
 import game_world
 import title_state
 import item_state
-import stage_middle
+import server
+from gate import bGate
+from boss import Boss
 
-
-
-skul = None
-map = None
-enemy = None
+gate = None
 
 def handle_events():
     events = get_events()
@@ -29,16 +27,19 @@ def handle_events():
             pass  # 엔딩 출력
             # game_framework.change_state(play_state)
         else:
-            skul.handle_event(event)
+            server.skul.handle_event(event)
 
 
 def enter():
-    global skul, map, enemy
-    skul = Skul()
-    map = Map()
-    enemy = Enemy()
-    game_world.add_object(map, 0)
-    game_world.add_object(skul, 1)
+    global gate
+    gate = bGate()
+    server.skul = Skul()
+    server.map = map.bossMap()
+    server.boss = Boss()
+    game_world.add_object(server.map, 0)
+    game_world.add_object(server.skul, 1)
+    game_world.add_object(gate, 1)
+    game_world.add_object(server.boss, 1)
 
 
 

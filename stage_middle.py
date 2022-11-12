@@ -9,11 +9,11 @@ import game_world
 import title_state
 import item_state
 import stage_boss
+import server
+from gate import mGate1, mGate2
 
-
-skul = None
-map = None
-enemy = None
+gate1 = None
+gate2 = None
 
 def handle_events():
     events = get_events()
@@ -27,20 +27,24 @@ def handle_events():
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_f):
             game_framework.change_state(stage_boss)
         else:
-            skul.handle_event(event)
+            server.skul.handle_event(event)
 
 
 def enter():
-    global skul, map, enemy
-    skul = Skul()
-    map = Map()
-    enemy = Enemy()
-    game_world.add_object(map, 0)
-    game_world.add_object(enemy, 1)
-    game_world.add_object(skul, 1)
+    global gate1, gate2
+    server.skul = Skul()
+    server.map = Map()
+    server.enemy = Enemy()
+    gate1 = mGate1()
+    gate2 = mGate2()
+    game_world.add_object(server.map, 0)
+    game_world.add_object(server.enemy, 1)
+    game_world.add_object(server.skul, 1)
+    game_world.add_object(gate1, 1)
+    game_world.add_object(gate2, 1)
 
-    game_world.add_collision_pairs(skul, enemy, 'skul:enemy')
-    game_world.add_collision_pairs(attack, enemy, 'skul_attack:enemy')
+    game_world.add_collision_pairs(server.skul, server.enemy, 'skul:enemy')
+    game_world.add_collision_pairs(attack, server.enemy, 'skul_attack:enemy')
 
 
 
