@@ -27,7 +27,8 @@ def handle_events():
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_p):
             game_framework.push_state(item_state)
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_f):
-            game_framework.change_state(stage_middle)
+            if server.gate_open:
+                game_framework.change_state(stage_middle)
         else:
             server.skul.handle_event(event)
 
@@ -44,6 +45,9 @@ def enter():
     game_world.add_object(server.skul, 1)
     game_world.add_object(gate1, 1)
     game_world.add_object(gate2, 1)
+
+    game_world.add_collision_pairs(server.skul, gate1, 'skul:start_gate1')
+    game_world.add_collision_pairs(server.skul, gate2, 'skul:start_gate2')
 
 
 # finalization code

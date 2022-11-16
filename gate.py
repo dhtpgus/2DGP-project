@@ -15,6 +15,7 @@ class Gate1:
         draw_rectangle(*self.get_bb())
 
     def update(self):
+        server.gate_open = False
         pass
 
     def get_bb(self):
@@ -23,6 +24,8 @@ class Gate1:
 
     def handle_collision(self, other, group):
         if group == 'skul:start_gate1':
+            server.gate_open = True
+            # print("collision:", group)
             pass   # 추가예정
 
 
@@ -39,7 +42,7 @@ class Gate2:
         draw_rectangle(*self.get_bb())
 
     def update(self):
-        pass
+        server.gate_open = False
 
     def get_bb(self):
         cx = self.x - server.map.window_left
@@ -47,6 +50,8 @@ class Gate2:
 
     def handle_collision(self, other, group):
         if group == 'skul:start_gate2':
+            server.gate_open = True
+            # print("collision", group)
             pass  # 추가예정
 
 
