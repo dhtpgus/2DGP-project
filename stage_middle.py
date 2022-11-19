@@ -45,6 +45,9 @@ def enter():
 
     game_world.add_collision_pairs(server.skul, server.enemy, 'skul:enemy')
     game_world.add_collision_pairs(attack, server.enemy, 'skul_attack:enemy')
+    # game_world.add_collision_pairs(server.skul, gate1, 'skul:mgate1')
+    # game_world.add_collision_pairs(server.skul, gate2, 'skul:mgate2')
+
 
 
 

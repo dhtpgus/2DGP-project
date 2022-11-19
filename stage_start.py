@@ -52,6 +52,7 @@ def enter():
 
 # finalization code
 def exit():
+    game_world.remove_collision_object(gate1)  # 충돌객체 삭제해주어야함
     game_world.clear()
 
 
