@@ -75,7 +75,8 @@ class mGate1:   # middlemap gate
         return cx - 150, self.y - 130, cx + 150, self.y + 130
 
     def handle_collision(self, other, group):
-        if group == 'skul:start_gate1':
+        if group == 'skul:m_gate1':
+            server.gate_open = True
             pass   # 추가예정
 
 
@@ -99,7 +100,8 @@ class mGate2:   # middlemap gate
         return cx - 150, self.y - 130, cx + 150, self.y + 130
 
     def handle_collision(self, other, group):
-        if group == 'skul:start_gate2':
+        if group == 'skul:m_gate2':
+            server.gate_open = True
             pass  # 추가예정
 
 
@@ -124,5 +126,5 @@ class bGate:   # bossmap gate
         return cx - 150, self.y - 130, cx + 150, self.y + 130
 
     def handle_collision(self, other, group):
-        if group == 'skul:start_gate2':
+        if group == 'skul:b_gate':
             pass  # 추가예정

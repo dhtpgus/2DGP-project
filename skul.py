@@ -16,7 +16,7 @@ key_event_table = {
     (SDL_KEYUP, SDLK_LEFT): LU
 }
 
-
+fall_speed = 0
 class IDLE:
     @staticmethod
     def enter(skul, event):
@@ -40,8 +40,9 @@ class IDLE:
 
     @staticmethod
     def do(skul):
-        global jumped, falling
+        global jumped, falling, fall_speed
         skul.frame = (skul.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
+        #before_jumped_y = skul.y
         if jumped:
             skul.diry = 2
             if skul.y >= 400:
@@ -49,10 +50,12 @@ class IDLE:
                 falling = True
                 skul.diry = -2
         if not jumped:
-            if skul.y <= 200:  # 나중에 현재위치에 맞게 바꿔줘야함
-                skul.diry = 0
-                falling = False
-        skul.y += skul.diry * 1
+            fall_speed = 2
+            skul.y -= fall_speed
+            # if skul.y <= 200:  # 나중에 현재위치에 맞게 바꿔줘야함
+            #     skul.diry = 0
+            #     falling = False
+        #skul.y += skul.diry * 1
         # skul.timer -= 1
         # if skul.timer == 0:
         #     print('timer 0')
@@ -263,4 +266,7 @@ class Skul:
         pass
 
     def handle_collision(self, other, group):
+        global fall_speed
+        if group == 'skul:map':
+            fall_speed = 0
         pass

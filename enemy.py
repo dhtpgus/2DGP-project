@@ -113,6 +113,8 @@ class Enemy:  # 잡몹은 y방향 이동없음
         chase_patrol_node = SelectorNode('Chase or Patrol')
         chase_patrol_node.add_children(chase_node, patrol_node)
 
+        #attack_chase_patrol_node = SelectorNode() # 공격 ai 만들어야함
+
         self.bt = BehaviorTree(chase_patrol_node)
 
     def update(self):

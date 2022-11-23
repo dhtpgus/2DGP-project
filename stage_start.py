@@ -48,11 +48,13 @@ def enter():
 
     game_world.add_collision_pairs(server.skul, gate1, 'skul:start_gate1')
     game_world.add_collision_pairs(server.skul, gate2, 'skul:start_gate2')
+    game_world.add_collision_pairs(server.skul, server.map, 'skul:map')
 
 
 # finalization code
 def exit():
     game_world.remove_collision_object(gate1)  # 충돌객체 삭제해주어야함
+    game_world.remove_collision_object(gate2)
     game_world.clear()
 
 

@@ -24,6 +24,9 @@ class Map:
     def get_bb(self):
         return 0, 0, 1600 - 1, 170
 
+    def get_bb_second_floor(self):
+        return 0 # 2층 좌표값 찾아서 작성
+
 
     def handle_collision(self, other, group):
         pass
