@@ -68,6 +68,7 @@ class mGate1:   # middlemap gate
         draw_rectangle(*self.get_bb())
 
     def update(self):
+        server.gate_open = False
         pass
 
     def get_bb(self):
@@ -75,7 +76,7 @@ class mGate1:   # middlemap gate
         return cx - 150, self.y - 130, cx + 150, self.y + 130
 
     def handle_collision(self, other, group):
-        if group == 'skul:m_gate1':
+        if group == 'skul:mgate1':
             server.gate_open = True
             pass   # 추가예정
 
@@ -93,6 +94,7 @@ class mGate2:   # middlemap gate
         draw_rectangle(*self.get_bb())
 
     def update(self):
+        server.gate_open = False
         pass
 
     def get_bb(self):
@@ -100,7 +102,7 @@ class mGate2:   # middlemap gate
         return cx - 150, self.y - 130, cx + 150, self.y + 130
 
     def handle_collision(self, other, group):
-        if group == 'skul:m_gate2':
+        if group == 'skul:mgate2':
             server.gate_open = True
             pass  # 추가예정
 

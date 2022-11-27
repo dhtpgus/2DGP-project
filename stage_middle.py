@@ -3,7 +3,9 @@ import game_framework
 import chdir
 from skul import Skul
 from skul import attack
+import skul
 from map import Map
+import map
 from enemy import Enemy
 import game_world
 import title_state
@@ -14,6 +16,8 @@ from gate import mGate1, mGate2
 
 gate1 = None
 gate2 = None
+floor1 = None
+floor2 = None
 
 def handle_events():
     events = get_events()
@@ -25,15 +29,18 @@ def handle_events():
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_p):
             game_framework.push_state(item_state)
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_f):
-            game_framework.change_state(stage_boss)
+            if server.gate_open:
+                game_framework.change_state(stage_boss)
         else:
             server.skul.handle_event(event)
 
 
 def enter():
-    global gate1, gate2
+    global gate1, gate2, floor1
     server.skul = Skul()
     server.map = Map()
+    floor1 = map.Map_floor1()
+    floor2 = map.Map_floor2()
     server.enemy = Enemy()
     gate1 = mGate1()
     gate2 = mGate2()
@@ -42,23 +49,31 @@ def enter():
     game_world.add_object(server.skul, 1)
     game_world.add_object(gate1, 1)
     game_world.add_object(gate2, 1)
+    game_world.add_object(floor1, 1)
+    game_world.add_object(floor2, 1)
 
     game_world.add_collision_pairs(server.skul, server.enemy, 'skul:enemy')
     game_world.add_collision_pairs(attack, server.enemy, 'skul_attack:enemy')
     game_world.add_collision_pairs(server.skul, gate1, 'skul:mgate1')
     game_world.add_collision_pairs(server.skul, gate2, 'skul:mgate2')
+    game_world.add_collision_pairs(server.skul, server.map, 'skul:map')
+    game_world.add_collision_pairs(server.skul, floor1, 'skul:floor1')
+    game_world.add_collision_pairs(server.skul, floor2, 'skul:floor2')
 
 
 
 
 # finalization code
 def exit():
+    game_world.remove_collision_object(floor1)
+    game_world.remove_collision_object(floor2)
     game_world.remove_collision_object(gate1)  # 충돌객체 삭제해주어야함
     game_world.remove_collision_object(gate2)
     game_world.clear()
 
 
 def update():
+    skul.falling = True
     for game_object in game_world.all_objects():
         game_object.update()
 
@@ -93,9 +108,19 @@ def collide(a, b):
         la, ba, ra, ta = a.get_bb()
         lb, bb, rb, tb = b.get_bb()
 
-    if la > rb: return False
-    if ra < lb: return False
-    if ta < bb: return False
-    if ba > tb: return False
+    if b == server.map or floor1 or floor2:
+        if la > rb: return False
+        if ra < lb: return False
+        if ta - 55 < bb: return False
+        if ba > tb: return False
 
-    return True
+        return True
+    else:
+        if la > rb: return False
+        if ra < lb: return False
+        if ta < bb: return False
+        if ba > tb: return False
+
+        return True
+
+

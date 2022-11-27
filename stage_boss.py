@@ -3,6 +3,7 @@ import game_framework
 import chdir
 from skul import Skul
 from skul import attack
+import skul
 import map
 from enemy import Enemy
 import game_world
@@ -13,6 +14,9 @@ from gate import bGate
 from boss import Boss
 
 gate = None
+floor1 = None
+floor2 = None
+floor3 = None
 
 def handle_events():
     events = get_events()
@@ -31,15 +35,25 @@ def handle_events():
 
 
 def enter():
-    global gate
+    global gate, floor1, floor2, floor3
     gate = bGate()
     server.skul = Skul()
     server.map = map.bossMap()
+    floor1 = map.bossMap_floor1()
+    floor2 = map.bossMap_floor2()
+    floor3 = map.bossMap_floor3()
     server.boss = Boss()
     game_world.add_object(server.map, 0)
-    game_world.add_object(server.skul, 1)
     game_world.add_object(gate, 1)
     game_world.add_object(server.boss, 1)
+    game_world.add_object(server.skul, 1)
+    game_world.add_object(floor1, 1)
+    game_world.add_object(floor2, 1)
+    game_world.add_object(floor3, 1)
+    game_world.add_collision_pairs(server.skul, server.map, 'skul:map')
+    game_world.add_collision_pairs(server.skul, floor1, 'skul:floor1')
+    game_world.add_collision_pairs(server.skul, floor2, 'skul:floor2')
+    game_world.add_collision_pairs(server.skul, floor3, 'skul:floor3')
 
 
 
@@ -49,6 +63,7 @@ def exit():
 
 
 def update():
+    skul.falling = True
     for game_object in game_world.all_objects():
         game_object.update()
 
@@ -83,9 +98,17 @@ def collide(a, b):
         la, ba, ra, ta = a.get_bb()
         lb, bb, rb, tb = b.get_bb()
 
-    if la > rb: return False
-    if ra < lb: return False
-    if ta < bb: return False
-    if ba > tb: return False
+    if b == server.map or floor1 or floor2:
+        if la > rb: return False
+        if ra < lb: return False
+        if ta - 55 < bb: return False
+        if ba > tb: return False
+
+        return True
+    else:
+        if la > rb: return False
+        if ra < lb: return False
+        if ta < bb: return False
+        if ba > tb: return False
 
     return True

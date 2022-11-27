@@ -3,6 +3,7 @@ import game_framework
 import chdir
 from skul import Skul
 from skul import attack
+import skul
 import map
 from enemy import Enemy
 import game_world
@@ -53,12 +54,14 @@ def enter():
 
 # finalization code
 def exit():
+    game_world.remove_collision_object(server.map)
     game_world.remove_collision_object(gate1)  # 충돌객체 삭제해주어야함
     game_world.remove_collision_object(gate2)
     game_world.clear()
 
 
 def update():
+    skul.falling = True
     for game_object in game_world.all_objects():
         game_object.update()
 

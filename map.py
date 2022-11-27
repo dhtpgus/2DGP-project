@@ -3,7 +3,43 @@ import chdir
 import server
 import gate
 
-class Map:
+class Map_floor1:
+    def __init__(self):
+       pass
+
+    def draw(self):
+        draw_rectangle(*self.get_bb())
+        pass
+
+    def update(self):
+        pass
+
+    def get_bb(self):
+        cx = 1500 - server.map.window_left
+        return cx - 350, 350, cx + 300, 370
+
+    def handle_collision(self, other, group):
+        pass
+
+class Map_floor2:
+    def __init__(self):
+       pass
+
+    def draw(self):
+        draw_rectangle(*self.get_bb())
+        pass
+
+    def update(self):
+        pass
+
+    def get_bb(self):
+        cx = 1830 - server.map.window_left
+        return cx - 350, 540, cx + 290, 560
+
+    def handle_collision(self, other, group):
+        pass
+
+class Map:  # middleMap
     def __init__(self):
         self.image = load_image('Skulmap_middle.png')
         self.canvas_width = get_canvas_width()
@@ -23,10 +59,6 @@ class Map:
 
     def get_bb(self):
         return 0, 0, 1600 - 1, 170
-
-    def get_bb_second_floor(self):
-        return 0 # 2층 좌표값 찾아서 작성
-
 
     def handle_collision(self, other, group):
         pass
@@ -80,4 +112,58 @@ class bossMap:
         pass
 
 
+class bossMap_floor1:
+    def __init__(self):
+       pass
 
+    def draw(self):
+        draw_rectangle(*self.get_bb())
+        pass
+
+    def update(self):
+        pass
+
+    def get_bb(self):
+        cx = 300 - server.map.window_left
+        return cx - 70, 580, cx + 68, 590
+
+    def handle_collision(self, other, group):
+        pass
+
+
+class bossMap_floor2:
+    def __init__(self):
+       pass
+
+    def draw(self):
+        draw_rectangle(*self.get_bb())
+        pass
+
+    def update(self):
+        pass
+
+    def get_bb(self):
+        cx = 280 - server.map.window_left
+        return cx - 80, 170, cx + 80, 320
+
+    def handle_collision(self, other, group):
+        pass
+
+
+class bossMap_floor3:
+    def __init__(self):
+       pass
+
+    def draw(self):
+        draw_rectangle(*self.get_bb())
+        pass
+
+    def update(self):
+        pass
+
+    def get_bb(self):
+        cx = 1930 - server.map.window_left
+        return cx - 200, 170, cx + 220, 380
+
+    def handle_collision(self, other, group):
+        pass

@@ -16,13 +16,17 @@ key_event_table = {
     (SDL_KEYUP, SDLK_LEFT): LU
 }
 
-fall_speed = 0
+
 class IDLE:
     @staticmethod
     def enter(skul, event):
-        global jumped, attack
+        global jumped, falling, attack, jumped_count
         if event == SPACE:
-            jumped = True
+            if jumped_count < 2:
+                jumped = True
+                falling = False
+                jumped_count += 1
+            pass
         elif event == XD:
             attack = True
             # game_world.add_object(skul_attack, 0)
@@ -40,26 +44,23 @@ class IDLE:
 
     @staticmethod
     def do(skul):
-        global jumped, falling, fall_speed
+        global jumped, falling, jump_height, jumped_count
         skul.frame = (skul.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
-        #before_jumped_y = skul.y
+        # before_jumped_y = skul.y
         if jumped:
+            falling = False
             skul.diry = 2
-            if skul.y >= 400:
+            jump_height += 2
+            if jump_height % 250 == 0:
                 jumped = False
-                falling = True
-                skul.diry = -2
-        if not jumped:
-            fall_speed = 2
-            skul.y -= fall_speed
-            # if skul.y <= 200:  # 나중에 현재위치에 맞게 바꿔줘야함
-            #     skul.diry = 0
-            #     falling = False
-        #skul.y += skul.diry * 1
-        # skul.timer -= 1
-        # if skul.timer == 0:
-        #     print('timer 0')
-        #     skul.add_event(TIMER)
+            # if skul.y >= 400:
+            #     jumped = False
+            #     falling = True
+            #     skul.diry = -2
+        if falling:
+            skul.diry = -2
+            pass
+        skul.y += skul.diry * RUN_SPEED_PPS * game_framework.frame_time
 
     @staticmethod
     def draw(skul):
@@ -95,7 +96,7 @@ FRAMES_PER_ACTION = 8
 
 class RUN:
     def enter(skul, event):
-        global jumped, falling, attack
+        global jumped, falling, attack, jumped_count
         if event == RD:
             skul.dir += 1
         elif event == LD:
@@ -105,7 +106,11 @@ class RUN:
         elif event == LU:
             skul.dir += 1
         elif event == SPACE:
-            jumped = True
+            if jumped_count < 2:
+                jumped = True
+                falling = False
+                jumped_count += 1
+            pass
         elif event == XD:
             attack = True
         elif event == XU:
@@ -117,25 +122,24 @@ class RUN:
         #     skul.fire_ball()
 
     def do(skul):
-        global jumped, falling
+        global jumped, falling, jump_height
         skul.face_dir = skul.dir
         skul.frame = (skul.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
         if jumped:
+            falling = False
             skul.diry = 2
-            if skul.y >= 400:
+            jump_height += 2
+            if jump_height % 250 == 0:
                 jumped = False
-                falling = True
-                skul.diry = -2
-        if not jumped:
-            if skul.y <= 200:  # 나중에 현재위치에 맞게 바꿔줘야함
-                skul.diry = 0
-                falling = False
+        if falling:
+            skul.diry = -2
+            pass
         skul.y += skul.diry * RUN_SPEED_PPS * game_framework.frame_time
         skul.x += skul.dir * RUN_SPEED_PPS * game_framework.frame_time
         skul.x = clamp(0, skul.x, server.map.w - 1)
 
     def draw(skul):
-        cx = skul.x-server.map.window_left
+        cx = skul.x - server.map.window_left
         # print(skul.x, cx) # skul.x 와 cx의 동작?????
         if attack and skul.face_dir == -1:
             attackL_images[int(skul.frame)].draw(cx, skul.y)
@@ -156,7 +160,9 @@ class RUN:
 
 
 jumped = False
-falling = False
+jumped_count = 0  # 이단점프까지만 가능하게 하기위해 만든 변수
+jump_height = 0  # 점프 높이
+falling = True
 attack = False
 attackR_images = []
 attackL_images = []
@@ -169,9 +175,10 @@ next_state = {
 
 class Skul:
     def __init__(self):
-        self.x, self.y = 300, 200
+        self.x, self.y = 300, 1000
         self.frame = 0
         self.dir, self.face_dir = 0, 1
+        self.diry = 0
         self.event_que = []
         self.cur_state = IDLE
         self.cur_state.enter(self, None)
@@ -220,31 +227,6 @@ class Skul:
         if attack:
             draw_rectangle(*self.get_attack_bb())
 
-        # if L == 0 and R == 0:
-        #     self.idle_image.clip_draw((self.frame // 2) * 77, 60, 72, 60, self.x, self.y - 2, 66, 55)
-        # elif attack and R == 1:
-        #     attackR_images[self.frame].draw(self.x, self.y)
-        #     delay(0.01)
-        # elif attack and L == 1:
-        #     attackL_images[self.frame].draw(self.x, self.y)
-        #     delay(0.01)
-        # elif jumped and R == 1:
-        #     self.jump_image.clip_draw((self.frame // 4) * 40, 0, 40, 61, self.x, self.y - 2)
-        # elif jumped and L == 1:
-        #     self.jump_image.clip_draw((self.frame // 4) * 40, 60, 40, 61, self.x, self.y - 2)
-        # elif falling and R == 1:
-        #     self.falling_image.clip_draw((self.frame // 4) * 67, 0, 67, 60, self.x, self.y - 2)
-        # elif falling and L == 1:
-        #     self.falling_image.clip_draw((self.frame // 4) * 67, 60, 67, 60, self.x, self.y - 2)
-        # elif idle == 1 and R == 1:
-        #     self.idle_image.clip_draw((self.frame // 2) * 77, 60, 72, 60, self.x, self.y - 2, 66, 55)
-        # elif idle == 1 and L == 1:
-        #     self.idle_image.clip_draw((self.frame // 2) * 77, 0, 72, 60, self.x, self.y, 66, 55)
-        # elif R == 1:
-        #     self.image.clip_draw(self.frame * 73, 62, 70, 60, self.x, self.y)
-        # elif L == 1:
-        #     self.image.clip_draw(self.frame * 73, 0, 70, 60, self.x, self.y)
-
     def add_event(self, event):
         self.event_que.insert(0, event)
 
@@ -255,7 +237,7 @@ class Skul:
 
     def get_bb(self):
         cx = self.x - server.map.window_left
-        return cx - 33, self.y - 30, cx + 30, self.y + 30
+        return cx - 33, self.y - 30, cx + 28, self.y + 30  # 조정필요
 
     def get_attack_bb(self):
         cx = self.x - server.map.window_left
@@ -266,7 +248,16 @@ class Skul:
         pass
 
     def handle_collision(self, other, group):
-        global fall_speed
+        global falling, jumped_count
         if group == 'skul:map':
-            fall_speed = 0
+            falling = False
+            self.diry = 0
+            self.y += 1
+            jumped_count = 0
+        if group == 'skul:floor1' or group == 'skul:floor2' or group == 'skul:floor3' and falling == True:
+            falling = False
+            self.diry = 0
+            # self.dir = 0
+            #self.y += 1
+            jumped_count = 0
         pass
