@@ -16,7 +16,7 @@ class Map_floor1:
 
     def get_bb(self):
         cx = 1500 - server.map.window_left
-        return cx - 350, 350, cx + 300, 370
+        return cx - 350, 365, cx + 300, 370
 
     def handle_collision(self, other, group):
         pass
@@ -34,7 +34,7 @@ class Map_floor2:
 
     def get_bb(self):
         cx = 1830 - server.map.window_left
-        return cx - 350, 540, cx + 290, 560
+        return cx - 350, 555, cx + 290, 560
 
     def handle_collision(self, other, group):
         pass
@@ -125,7 +125,7 @@ class bossMap_floor1:
 
     def get_bb(self):
         cx = 300 - server.map.window_left
-        return cx - 70, 580, cx + 68, 590
+        return cx - 70, 585, cx + 68, 590
 
     def handle_collision(self, other, group):
         pass
@@ -144,7 +144,7 @@ class bossMap_floor2:
 
     def get_bb(self):
         cx = 280 - server.map.window_left
-        return cx - 80, 170, cx + 80, 320
+        return cx - 80, 315, cx + 80, 320
 
     def handle_collision(self, other, group):
         pass
@@ -163,7 +163,7 @@ class bossMap_floor3:
 
     def get_bb(self):
         cx = 1930 - server.map.window_left
-        return cx - 200, 170, cx + 220, 380
+        return cx - 200, 375, cx + 220, 380
 
     def handle_collision(self, other, group):
         pass

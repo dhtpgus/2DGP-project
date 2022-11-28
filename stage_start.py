@@ -67,7 +67,7 @@ def update():
 
         for a, b, group in game_world.all_collision_pairs():
             if collide(a, b):
-                print("COLLISION", group)
+                #print("COLLISION", group)
                 a.handle_collision(b, group)  # 누가와서 충돌했는지, 어떤 관계인지정보를 알려주고 객체가 알아서 처리하도록하자
                 b.handle_collision(a, group)
 

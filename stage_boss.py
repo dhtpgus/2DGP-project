@@ -35,6 +35,7 @@ def handle_events():
 
 
 def enter():
+    server.boss_stage = True
     global gate, floor1, floor2, floor3
     gate = bGate()
     server.skul = Skul()

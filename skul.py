@@ -136,7 +136,20 @@ class RUN:
             pass
         skul.y += skul.diry * RUN_SPEED_PPS * game_framework.frame_time
         skul.x += skul.dir * RUN_SPEED_PPS * game_framework.frame_time
-        skul.x = clamp(0, skul.x, server.map.w - 1)
+
+        if server.boss_stage == True:
+            if skul.y < 342:
+                cx = 280 - server.map.window_left
+                skul.x = clamp(cx + 80, skul.x, cx + 2330)
+            elif 342 <= skul.y < 407:
+                cx = 280 - server.map.window_left
+                skul.x = clamp(cx - 60, skul.x, cx + 2330)
+            elif skul.y >= 407:
+                cx = 280 - server.map.window_left
+                skul.x = clamp(cx - 50, skul.x, server.map.w - 1)
+        else:
+            skul.x = clamp(0, skul.x, server.map.w - 1)
+
 
     def draw(skul):
         cx = skul.x - server.map.window_left
@@ -212,6 +225,7 @@ class Skul:
             self.cur_state.exit(self, event)
             try:
                 self.cur_state = next_state[self.cur_state][event]
+
             except KeyError:
                 pass
                 # print('ERROR', self.cur_state, 'Event', event_name[event])
