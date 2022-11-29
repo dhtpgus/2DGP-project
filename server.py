@@ -6,3 +6,4 @@ stage = None
 gate_open = False
 boss_stage = False
 cur_state = None
+skul_attacked = False

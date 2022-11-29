@@ -188,6 +188,7 @@ next_state = {
 
 class Skul:
     def __init__(self):
+        self.hp = 100
         self.x, self.y = 300, 1000
         self.frame = 0
         self.dir, self.face_dir = 0, 1

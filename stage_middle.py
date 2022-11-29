@@ -37,7 +37,7 @@ def handle_events():
 
 
 def enter():
-    global gate1, gate2, floor1
+    global gate1, gate2, floor1, floor2
     server.skul = Skul()
     server.map = Map()
     floor1 = map.Map_floor1()
