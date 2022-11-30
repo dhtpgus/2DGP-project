@@ -24,10 +24,13 @@ Enemy_run_image = []
 Enemy_attack_image = []
 
 
-class Enemy:  # 잡몹은 y방향 이동없음
+class Enemy:
 
     def prepare_patrol_points(self):
         positions = [(1200, 215), (1300, 215), (1400, 215), (1500, 215), (1600, 215), (1700, 215)]
+        # floor_positions = [(1200, 415), (1300, 415), (1400, 415), (1500, 415), (1600, 415), (1700, 415)] 2층 좌표 찾아야함
+        # # 2층인 경우 따로 position 설정, 중력적용하고(추가해야함, skul에서처럼), chase할때 2층에서 바닥으로 내려온경우 기존의 positions 적용
+        # # 3층인 경우도 추가 해야함
         self.patrol_points = []
         for p in positions:
             self.patrol_points.append((p[0], p[1]))
@@ -76,7 +79,7 @@ class Enemy:  # 잡몹은 y방향 이동없음
 
     def find_player(self):
         distance = (server.skul.x - self.x) ** 2 + (server.skul.y - self.y) ** 2
-        if distance < (PIXEL_PER_METER * 20) ** 2:  # 20미터 이내의 플레이어 감지
+        if distance < (PIXEL_PER_METER * 20) ** 2 and server.skul.y < self.y + 60:  # 20미터 이내의 플레이어 감지, 자신의 y값보다 높으면 감지 못함
             return BehaviorTree.SUCCESS
         else:
             self.speed = 0
@@ -162,8 +165,8 @@ class Enemy:  # 잡몹은 y방향 이동없음
                     server.skul.y - 30 > self.y + 47):
                 server.skul_attacked = True
         if server.skul_attacked:  # server.skul.hp 는 스테이지별로 따로 적용되서 skul.hp값을 다음 스테이지로 넘겨주거나 server에 skul_hp를 만들어주거나 해야할것같음(수정필요)
-            server.skul.hp -= 0.1
-            print(int(server.skul.hp))
+            server.skul_hp -= 0.1
+            print(int(server.skul_hp))
             server.skul_attacked = False
 
         # self.y += self.speed * math.sin(self.dir) * game_framework.frame_time
