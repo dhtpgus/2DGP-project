@@ -2,11 +2,12 @@ from pico2d import *
 import game_framework
 import chdir
 from skul import Skul
-from skul import attack
 import skul
+from skul_attack import Skul_Attack
 from map import Map
 import map
 from enemy import Enemy
+import enemy2, enemy3
 import game_world
 import title_state
 import item_state
@@ -29,7 +30,7 @@ def handle_events():
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_p):
             game_framework.push_state(item_state)
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_f):
-            if server.gate_open:
+            if server.gate_open and server.enemy_count == 0:
                 game_framework.change_state(stage_boss)
         else:
             server.skul.handle_event(event)
@@ -38,23 +39,26 @@ def handle_events():
 
 def enter():
     global gate1, gate2, floor1, floor2
+    server.enemy_count = 3
     server.skul = Skul()
     server.map = Map()
     floor1 = map.Map_floor1()
     floor2 = map.Map_floor2()
     server.enemy = Enemy()
+    server.enemy2 = enemy2.Enemy()
+    server.enemy3 = enemy3.Enemy()
     gate1 = mGate1()
     gate2 = mGate2()
     game_world.add_object(server.map, 0)
     game_world.add_object(server.enemy, 1)
+    game_world.add_object(server.enemy2, 1)
+    game_world.add_object(server.enemy3, 1)
     game_world.add_object(server.skul, 1)
     game_world.add_object(gate1, 1)
     game_world.add_object(gate2, 1)
     game_world.add_object(floor1, 1)
     game_world.add_object(floor2, 1)
 
-    game_world.add_collision_pairs(server.skul, server.enemy, 'skul:enemy')
-    game_world.add_collision_pairs(attack, server.enemy, 'skul_attack:enemy')
     game_world.add_collision_pairs(server.skul, gate1, 'skul:mgate1')
     game_world.add_collision_pairs(server.skul, gate2, 'skul:mgate2')
     game_world.add_collision_pairs(server.skul, server.map, 'skul:map')
@@ -74,6 +78,9 @@ def exit():
 
 
 def update():
+    if server.enemy_count == 0:
+        print('open door')
+        pass
     skul.falling = True
     for game_object in game_world.all_objects():
         game_object.update()
@@ -102,12 +109,8 @@ def resume():
     pass
 
 def collide(a, b):
-    if a == attack:
-        la, ba, ra, ta = a.get_attack_bb()
-        lb, bb, rb, tb = b.get_bb()
-    else:
-        la, ba, ra, ta = a.get_bb()
-        lb, bb, rb, tb = b.get_bb()
+    la, ba, ra, ta = a.get_bb()
+    lb, bb, rb, tb = b.get_bb()
 
     if b == server.map or floor1 or floor2:
         if la > rb: return False

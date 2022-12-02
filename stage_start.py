@@ -92,12 +92,8 @@ def resume():
 
 
 def collide(a, b):
-    if a == attack:
-        la, ba, ra, ta = a.get_attack_bb()
-        lb, bb, rb, tb = b.get_bb()
-    else:
-        la, ba, ra, ta = a.get_bb()
-        lb, bb, rb, tb = b.get_bb()
+    la, ba, ra, ta = a.get_bb()
+    lb, bb, rb, tb = b.get_bb()
 
     if la > rb: return False
     if ra < lb: return False

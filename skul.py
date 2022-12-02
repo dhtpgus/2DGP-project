@@ -3,6 +3,8 @@ import chdir
 import game_world
 import game_framework
 import server
+import enemy
+from skul_attack import Skul_Attack
 
 RD, LD, RU, LU, TIMER, SPACE, XD, XU = range(8)
 event_name = ['RD', 'LD', 'RU', 'LU', 'TIMER', 'SPACE', 'XD', 'XU']
@@ -29,18 +31,14 @@ class IDLE:
             pass
         elif event == XD:
             attack = True
-            # game_world.add_object(skul_attack, 0)
         elif event == XU:
             attack = False
-            # game_world.remove_object(attack)
         skul.dir = 0
         skul.timer = 100
 
     @staticmethod
     def exit(skul, event):
         pass
-        # if event == SPACE:
-        #     skul.fire_ball()
 
     @staticmethod
     def do(skul):
@@ -53,10 +51,6 @@ class IDLE:
             jump_height += 2
             if jump_height % 250 == 0:
                 jumped = False
-            # if skul.y >= 400:
-            #     jumped = False
-            #     falling = True
-            #     skul.diry = -2
         if falling:
             skul.diry = -2
             pass
@@ -118,8 +112,6 @@ class RUN:
 
     def exit(skul, event):
         skul.face_dir = skul.dir
-        # if event == SPACE:
-        #     skul.fire_ball()
 
     def do(skul):
         global jumped, falling, jump_height
@@ -150,7 +142,6 @@ class RUN:
         else:
             skul.x = clamp(0, skul.x, server.map.w - 1)
 
-
     def draw(skul):
         cx = skul.x - server.map.window_left
         # print(skul.x, cx) # skul.x 와 cx의 동작?????
@@ -179,6 +170,7 @@ falling = True
 attack = False
 attackR_images = []
 attackL_images = []
+skul_hp_bar = []
 
 next_state = {
     IDLE: {RU: RUN, LU: RUN, RD: RUN, LD: RUN},
@@ -199,22 +191,12 @@ class Skul:
         self.idle_image = load_image('skulidle2.png')
         self.jump_image = load_image('skuljump2.png')
         self.falling_image = load_image('skulfall2.png')
-        attackR_images.append(load_image('attack_1.png'))
-        attackR_images.append(load_image('attack_2.png'))
-        attackR_images.append(load_image('attack_3.png'))
-        attackR_images.append(load_image('attack_4.png'))
-        attackR_images.append(load_image('attack_5.png'))
-        attackR_images.append(load_image('attack_6.png'))
-        attackR_images.append(load_image('attack_7.png'))
-        attackR_images.append(load_image('attack_8.png'))
-        attackL_images.append(load_image('attackL_1.png'))
-        attackL_images.append(load_image('attackL_2.png'))
-        attackL_images.append(load_image('attackL_3.png'))
-        attackL_images.append(load_image('attackL_4.png'))
-        attackL_images.append(load_image('attackL_5.png'))
-        attackL_images.append(load_image('attackL_6.png'))
-        attackL_images.append(load_image('attackL_7.png'))
-        attackL_images.append(load_image('attackL_8.png'))
+        for i in range(1, 9):
+            attackR_images.append(load_image('attack_' + '%d' % i + '.png'))
+        for i in range(1, 9):
+            attackL_images.append(load_image('attackL_' + '%d' % i + '.png'))
+        for i in range(12):
+            skul_hp_bar.append(load_image('hp_bar_' + '%d' % i + '.png'))
 
         self.item = None
 
@@ -225,21 +207,90 @@ class Skul:
             self.cur_state.exit(self, event)
             try:
                 self.cur_state = next_state[self.cur_state][event]
-
             except KeyError:
                 pass
                 # print('ERROR', self.cur_state, 'Event', event_name[event])
                 # print(f'ERROR: State {self.cur_state.__name__}  Event {event_name[event]}')
             self.cur_state.enter(self, event)
-
         self.x = clamp(0, self.x, server.map.w - 1)
         self.y = clamp(0, self.y, server.map.h - 1)
+
+        # enemy 객체로 동작이 적을 추가하면 이상하게 동작하게되서 일단 enemy2,3추가
+        if attack == True and self.face_dir == 1:
+            cx = self.x - server.map.window_left # 내 위치
+            dx = server.enemy.x - server.map.window_left # enemy 위치
+            if not(dx - 30 > cx + 50) and not(dx + 30 < cx - 47) and not(server.enemy.y + 47 < self.y - 30) and not(server.enemy.y - 45 > self.y +30):
+                server.enemy_attacked = True
+        elif attack == True and self.face_dir == -1:
+            cx = self.x - server.map.window_left  # 내 위치
+            dx = server.enemy.x - server.map.window_left  # enemy 위치
+            if not(dx - 30 > cx + 47) and not(dx + 30 < cx - 50) and not(server.enemy.y + 47 < self.y - 30) and not(server.enemy.y - 45 > self.y +30):
+                server.enemy_attacked = True
+        if server.enemy_attacked:
+            server.enemy.hp -= 0.1
+            server.enemy_attacked = False
+
+        if attack == True and self.face_dir == 1:
+            cx = self.x - server.map.window_left # 내 위치
+            dx = server.enemy2.x - server.map.window_left # enemy 위치
+            if not(dx - 30 > cx + 50) and not(dx + 30 < cx - 47) and not(server.enemy2.y + 47 < self.y - 30) and not(server.enemy2.y - 45 > self.y +30):
+                server.enemy2_attacked = True
+        elif attack == True and self.face_dir == -1:
+            cx = self.x - server.map.window_left  # 내 위치
+            dx = server.enemy2.x - server.map.window_left  # enemy 위치
+            if not(dx - 30 > cx + 47) and not(dx + 30 < cx - 50) and not(server.enemy2.y + 47 < self.y - 30) and not(server.enemy2.y - 45 > self.y +30):
+                server.enemy2_attacked = True
+        if server.enemy2_attacked:
+            server.enemy2.hp -= 0.1
+            server.enemy2_attacked = False
+
+        if attack == True and self.face_dir == 1:
+            cx = self.x - server.map.window_left  # 내 위치
+            dx = server.enemy3.x - server.map.window_left  # enemy 위치
+            if not (dx - 30 > cx + 50) and not (dx + 30 < cx - 47) and not (
+                    server.enemy3.y + 47 < self.y - 30) and not (server.enemy3.y - 45 > self.y + 30):
+                server.enemy3_attacked = True
+        elif attack == True and self.face_dir == -1:
+            cx = self.x - server.map.window_left  # 내 위치
+            dx = server.enemy3.x - server.map.window_left  # enemy 위치
+            if not (dx - 30 > cx + 47) and not (dx + 30 < cx - 50) and not (
+                    server.enemy3.y + 47 < self.y - 30) and not (server.enemy3.y - 45 > self.y + 30):
+                server.enemy3_attacked = True
+        if server.enemy3_attacked:
+            server.enemy3.hp -= 0.1
+            server.enemy3_attacked = False
+
 
     def draw(self):
         self.cur_state.draw(self)
         draw_rectangle(*self.get_bb())  # tuple 값을 나눠서 인자로 분배하기위해 * 을 사용
         if attack:
             draw_rectangle(*self.get_attack_bb())
+        if server.skul_hp == 100:
+            skul_hp_bar[11].draw(200, 90)
+        elif 96 < server.skul_hp < 100:
+            skul_hp_bar[10].draw(200, 90)
+        elif 90 < server.skul_hp <= 96:
+            skul_hp_bar[9].draw(200, 90)
+        elif 80 < server.skul_hp <= 90:
+            skul_hp_bar[8].draw(200, 90)
+        elif 70 < server.skul_hp <= 80:
+            skul_hp_bar[7].draw(200, 90)
+        elif 60 < server.skul_hp <= 70:
+            skul_hp_bar[6].draw(200, 90)
+        elif 50 < server.skul_hp <= 60:
+            skul_hp_bar[5].draw(200, 90)
+        elif 40 < server.skul_hp <= 50:
+            skul_hp_bar[4].draw(200, 90)
+        elif 30 < server.skul_hp <= 40:
+            skul_hp_bar[3].draw(200, 90)
+        elif 15 < server.skul_hp <= 30:
+            skul_hp_bar[2].draw(200, 90)
+        elif 0 < server.skul_hp <= 15:
+            skul_hp_bar[1].draw(200, 90)
+        elif server.skul_hp <= 0:
+            skul_hp_bar[0].draw(200, 90)
+
 
     def add_event(self, event):
         self.event_que.insert(0, event)
@@ -272,6 +323,6 @@ class Skul:
             falling = False
             self.diry = 0
             # self.dir = 0
-            #self.y += 1
+            # self.y += 1
             jumped_count = 0
         pass

@@ -27,7 +27,7 @@ Enemy_hp_bar = []
 
 class Enemy:
     def prepare_patrol_points(self):
-        positions = [(1200, 215), (1300, 215), (1400, 215), (1500, 215), (1600, 215), (1700, 215)]
+        positions = [(1550, 600), (1650, 600), (1750, 600), (1850, 600), (1950, 600), (2050, 600)]
         self.patrol_points = []
         for p in positions:
             self.patrol_points.append((p[0], p[1]))
@@ -212,7 +212,7 @@ class Enemy:
             Enemy_hp_bar[0].draw(cx + 15, self.y - 60)
 
         if self.hp <= 0:
-            game_world.remove_object(server.enemy)
+            game_world.remove_object(server.enemy3)
             server.enemy_count -= 1
         draw_rectangle(*self.get_bb())
 
