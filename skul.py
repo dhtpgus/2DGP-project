@@ -216,49 +216,72 @@ class Skul:
         self.y = clamp(0, self.y, server.map.h - 1)
 
         # enemy 객체로 동작이 적을 추가하면 이상하게 동작하게되서 일단 enemy2,3추가
-        if attack == True and self.face_dir == 1:
-            cx = self.x - server.map.window_left # 내 위치
-            dx = server.enemy.x - server.map.window_left # enemy 위치
-            if not(dx - 30 > cx + 50) and not(dx + 30 < cx - 47) and not(server.enemy.y + 47 < self.y - 30) and not(server.enemy.y - 45 > self.y +30):
-                server.enemy_attacked = True
-        elif attack == True and self.face_dir == -1:
-            cx = self.x - server.map.window_left  # 내 위치
-            dx = server.enemy.x - server.map.window_left  # enemy 위치
-            if not(dx - 30 > cx + 47) and not(dx + 30 < cx - 50) and not(server.enemy.y + 47 < self.y - 30) and not(server.enemy.y - 45 > self.y +30):
-                server.enemy_attacked = True
-        if server.enemy_attacked:
-            server.enemy.hp -= 0.1
-            server.enemy_attacked = False
+        if server.enemy2 is not None:
+            if attack == True and self.face_dir == 1:
+                cx = self.x - server.map.window_left  # 내 위치
+                dx = server.enemy.x - server.map.window_left  # enemy 위치
+                if not (dx - 30 > cx + 50) and not (dx + 30 < cx - 47) and not (
+                        server.enemy.y + 47 < self.y - 30) and not (server.enemy.y - 45 > self.y + 30):
+                    server.enemy_attacked = True
+            elif attack == True and self.face_dir == -1:
+                cx = self.x - server.map.window_left  # 내 위치
+                dx = server.enemy.x - server.map.window_left  # enemy 위치
+                if not (dx - 30 > cx + 47) and not (dx + 30 < cx - 50) and not (
+                        server.enemy.y + 47 < self.y - 30) and not (server.enemy.y - 45 > self.y + 30):
+                    server.enemy_attacked = True
+            if server.enemy_attacked:
+                server.enemy.hp -= 0.1
+                server.enemy_attacked = False
 
-        if attack == True and self.face_dir == 1:
-            cx = self.x - server.map.window_left # 내 위치
-            dx = server.enemy2.x - server.map.window_left # enemy 위치
-            if not(dx - 30 > cx + 50) and not(dx + 30 < cx - 47) and not(server.enemy2.y + 47 < self.y - 30) and not(server.enemy2.y - 45 > self.y +30):
-                server.enemy2_attacked = True
-        elif attack == True and self.face_dir == -1:
-            cx = self.x - server.map.window_left  # 내 위치
-            dx = server.enemy2.x - server.map.window_left  # enemy 위치
-            if not(dx - 30 > cx + 47) and not(dx + 30 < cx - 50) and not(server.enemy2.y + 47 < self.y - 30) and not(server.enemy2.y - 45 > self.y +30):
-                server.enemy2_attacked = True
-        if server.enemy2_attacked:
-            server.enemy2.hp -= 0.1
-            server.enemy2_attacked = False
+            if attack == True and self.face_dir == 1:
+                cx = self.x - server.map.window_left  # 내 위치
+                dx = server.enemy2.x - server.map.window_left  # enemy 위치
+                if not (dx - 30 > cx + 50) and not (dx + 30 < cx - 47) and not (
+                        server.enemy2.y + 47 < self.y - 30) and not (server.enemy2.y - 45 > self.y + 30):
+                    server.enemy2_attacked = True
+            elif attack == True and self.face_dir == -1:
+                cx = self.x - server.map.window_left  # 내 위치
+                dx = server.enemy2.x - server.map.window_left  # enemy 위치
+                if not (dx - 30 > cx + 47) and not (dx + 30 < cx - 50) and not (
+                        server.enemy2.y + 47 < self.y - 30) and not (server.enemy2.y - 45 > self.y + 30):
+                    server.enemy2_attacked = True
+            if server.enemy2_attacked:
+                server.enemy2.hp -= 0.1
+                server.enemy2_attacked = False
 
-        if attack == True and self.face_dir == 1:
-            cx = self.x - server.map.window_left  # 내 위치
-            dx = server.enemy3.x - server.map.window_left  # enemy 위치
-            if not (dx - 30 > cx + 50) and not (dx + 30 < cx - 47) and not (
-                    server.enemy3.y + 47 < self.y - 30) and not (server.enemy3.y - 45 > self.y + 30):
-                server.enemy3_attacked = True
-        elif attack == True and self.face_dir == -1:
-            cx = self.x - server.map.window_left  # 내 위치
-            dx = server.enemy3.x - server.map.window_left  # enemy 위치
-            if not (dx - 30 > cx + 47) and not (dx + 30 < cx - 50) and not (
-                    server.enemy3.y + 47 < self.y - 30) and not (server.enemy3.y - 45 > self.y + 30):
-                server.enemy3_attacked = True
-        if server.enemy3_attacked:
-            server.enemy3.hp -= 0.1
-            server.enemy3_attacked = False
+            if attack == True and self.face_dir == 1:
+                cx = self.x - server.map.window_left  # 내 위치
+                dx = server.enemy3.x - server.map.window_left  # enemy 위치
+                if not (dx - 30 > cx + 50) and not (dx + 30 < cx - 47) and not (
+                        server.enemy3.y + 47 < self.y - 30) and not (server.enemy3.y - 45 > self.y + 30):
+                    server.enemy3_attacked = True
+            elif attack == True and self.face_dir == -1:
+                cx = self.x - server.map.window_left  # 내 위치
+                dx = server.enemy3.x - server.map.window_left  # enemy 위치
+                if not (dx - 30 > cx + 47) and not (dx + 30 < cx - 50) and not (
+                        server.enemy3.y + 47 < self.y - 30) and not (server.enemy3.y - 45 > self.y + 30):
+                    server.enemy3_attacked = True
+            if server.enemy3_attacked:
+                server.enemy3.hp -= 0.1
+                server.enemy3_attacked = False
+
+        if server.boss is not None:
+            if attack == True and self.face_dir == 1:
+                cx = self.x - server.map.window_left  # 내 위치
+                dx = server.boss.x - server.map.window_left  # enemy 위치
+                if not (dx - 30 > cx + 50) and not (dx + 30 < cx - 47) and not (
+                        server.boss.y + 47 < self.y - 30) and not (server.boss.y - 45 > self.y + 30):
+                    server.boss_attacked = True
+            elif attack == True and self.face_dir == -1:
+                cx = self.x - server.map.window_left  # 내 위치
+                dx = server.boss.x - server.map.window_left  # enemy 위치
+                if not (dx - 30 > cx + 47) and not (dx + 30 < cx - 50) and not (
+                        server.boss.y + 47 < self.y - 30) and not (server.boss.y - 45 > self.y + 30):
+                    server.boss_attacked = True
+            if server.boss_attacked:
+                server.boss.hp -= 0.1 / 2.0  # 보스의 경우 들어가는 데미지 감소
+                server.boss_attacked = False
+            pass
 
 
     def draw(self):

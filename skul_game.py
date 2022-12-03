@@ -11,6 +11,6 @@ import stage_boss
 server.stage = stage_start
 
 pico2d.open_canvas(1280, 720)
-game_framework.run(logo_state)
-#game_framework.run(stage_boss)
+#game_framework.run(logo_state)
+game_framework.run(stage_boss)
 pico2d.close_canvas()

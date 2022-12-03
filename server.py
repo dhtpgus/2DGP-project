@@ -12,5 +12,6 @@ skul_attacked = False
 enemy_attacked = False
 enemy2_attacked = False
 enemy3_attacked = False
+boss_attacked = False
 skul_hp = 100
 enemy_count = 0
