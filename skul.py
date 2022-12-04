@@ -269,14 +269,14 @@ class Skul:
             if attack == True and self.face_dir == 1:
                 cx = self.x - server.map.window_left  # 내 위치
                 dx = server.boss.x - server.map.window_left  # enemy 위치
-                if not (dx - 30 > cx + 50) and not (dx + 30 < cx - 47) and not (
-                        server.boss.y + 47 < self.y - 30) and not (server.boss.y - 45 > self.y + 30):
+                if not (dx - 78 > cx + 50) and not (dx + 78 < cx - 47) and not (
+                        server.boss.y + 70 < self.y - 30) and not (server.boss.y - 78 > self.y + 30):
                     server.boss_attacked = True
             elif attack == True and self.face_dir == -1:
                 cx = self.x - server.map.window_left  # 내 위치
                 dx = server.boss.x - server.map.window_left  # enemy 위치
-                if not (dx - 30 > cx + 47) and not (dx + 30 < cx - 50) and not (
-                        server.boss.y + 47 < self.y - 30) and not (server.boss.y - 45 > self.y + 30):
+                if not (dx - 78 > cx + 47) and not (dx + 78 < cx - 50) and not (
+                        server.boss.y + 70 < self.y - 30) and not (server.boss.y - 78 > self.y + 30):
                     server.boss_attacked = True
             if server.boss_attacked:
                 server.boss.hp -= 0.1 / 2.0  # 보스의 경우 들어가는 데미지 감소

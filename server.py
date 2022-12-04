@@ -9,6 +9,7 @@ gate_open = False
 boss_stage = False
 cur_state = None
 skul_attacked = False
+skul_power_attacked = False
 enemy_attacked = False
 enemy2_attacked = False
 enemy3_attacked = False

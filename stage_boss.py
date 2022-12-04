@@ -36,6 +36,7 @@ def handle_events():
 
 def enter():
     server.boss_stage = True
+    server.enemy_count = 1
     global gate, floor1, floor2, floor3
     gate = bGate()
     server.skul = Skul()
@@ -45,12 +46,13 @@ def enter():
     floor3 = map.bossMap_floor3()
     server.boss = Boss()
     game_world.add_object(server.map, 0)
-    game_world.add_object(gate, 1)
+    game_world.add_object(gate, 0)
     game_world.add_object(server.boss, 1)
     game_world.add_object(server.skul, 1)
-    game_world.add_object(floor1, 1)
-    game_world.add_object(floor2, 1)
-    game_world.add_object(floor3, 1)
+    game_world.add_object(floor1, 0)
+    game_world.add_object(floor2, 0)
+    game_world.add_object(floor3, 0)
+    game_world.add_collision_pairs(server.skul, server.boss, 'skul:boss')
     game_world.add_collision_pairs(server.skul, server.map, 'skul:map')
     game_world.add_collision_pairs(server.skul, floor1, 'skul:floor1')
     game_world.add_collision_pairs(server.skul, floor2, 'skul:floor2')
@@ -64,6 +66,9 @@ def exit():
 
 
 def update():
+    if server.enemy_count == 0:
+        print('open door')
+        pass
     skul.falling = True
     for game_object in game_world.all_objects():
         game_object.update()

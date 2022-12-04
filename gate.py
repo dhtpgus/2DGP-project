@@ -59,12 +59,14 @@ class mGate1:   # middlemap gate
     image = None
 
     def __init__(self):
-        # if gate1.image == None:
-        #     gate1.image = load_image('gate.png')
+        if self.image == None:
+            self.image = load_image('gate1.png')
         self.x, self.y, = 1920, 300
 
     def draw(self):
-        # self.image.draw(self.x, self.y)
+        cx = self.x - 15 - server.map.window_left
+        if server.enemy_count == 0:
+            self.image.draw(cx, self.y + 10, 390.5, 266.2)  # 355, 242
         draw_rectangle(*self.get_bb())
 
     def update(self):
@@ -85,12 +87,14 @@ class mGate2:   # middlemap gate
     image = None
 
     def __init__(self):
-        # if gate1.image == None:
-        #     gate1.image = load_image('gate.png')
+        if self.image == None:
+            self.image = load_image('gate2.png')
         self.x, self.y, = 2520, 300
 
     def draw(self):
-        # self.image.draw(self.x, self.y)
+        cx = self.x - server.map.window_left
+        if server.enemy_count == 0:
+            self.image.draw(cx, self.y + 10, 390.5, 266.2)  # 355, 242
         draw_rectangle(*self.get_bb())
 
     def update(self):
@@ -112,12 +116,14 @@ class bGate:   # bossmap gate
     image = None
 
     def __init__(self):
-        # if gate1.image == None:
-        #     gate1.image = load_image('gate.png')
+        if self.image == None:
+            self.image = load_image('gate1.png')
         self.x, self.y, = 1930, 500
 
     def draw(self):
-        # self.image.draw(self.x, self.y)
+        cx = self.x - 20 - server.map.window_left
+        if server.enemy_count == 0:
+            self.image.draw(cx, self.y + 10, 390.5, 266.2)  # 355, 242
         draw_rectangle(*self.get_bb())
 
     def update(self):
