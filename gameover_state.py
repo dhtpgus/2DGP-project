@@ -5,11 +5,11 @@ import title_state
 
 running = True
 image = None
-logo_time = 0.0
+gameover_time = 0.0
 
 def enter():
     global image
-    image = load_image('./resource/sprites/tuk_credit.png')
+    image = load_image('./resource/sprites/gameover.png')
     pass
 
 def exit():
@@ -18,18 +18,18 @@ def exit():
     pass
 
 def update():
-    global logo_time
+    global gameover_time
     # global running
-    if logo_time > 0.5:
-        logo_time = 0
-        game_framework.change_state(title_state)
+    if gameover_time > 2:
+        gameover_time = 0
+        game_framework.quit()
     delay(0.01)
-    logo_time += 0.01
+    gameover_time += 0.01
     pass
 
 def draw():
     clear_canvas()
-    image.draw(1280 // 2, 720 // 2 - 50)
+    image.draw(1280 // 2, 720 // 2)
     update_canvas()
     pass
 

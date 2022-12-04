@@ -1,9 +1,7 @@
 from pico2d import *
 import game_framework
-import chdir
 from skul import Skul
 import skul
-from skul_attack import Skul_Attack
 from map import Map
 import map
 from enemy import Enemy
@@ -12,6 +10,7 @@ import game_world
 import title_state
 import item_state
 import stage_boss
+import gameover_state
 import server
 from gate import mGate1, mGate2
 
@@ -78,9 +77,8 @@ def exit():
 
 
 def update():
-    if server.enemy_count == 0:
-        print('open door')
-        pass
+    if server.skul_hp <= 0:
+        game_framework.change_state(gameover_state)
     skul.falling = True
     for game_object in game_world.all_objects():
         game_object.update()

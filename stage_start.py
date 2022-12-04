@@ -1,8 +1,6 @@
 from pico2d import *
 import game_framework
-import chdir
 from skul import Skul
-from skul import attack
 import skul
 import map
 from enemy import Enemy

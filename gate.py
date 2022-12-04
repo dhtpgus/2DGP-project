@@ -12,7 +12,9 @@ class Gate1:
 
     def draw(self):
         # self.image.draw(self.x, self.y)
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
+        pass
+
 
     def update(self):
         server.gate_open = False
@@ -39,7 +41,8 @@ class Gate2:
 
     def draw(self):
         # self.image.draw(self.x, self.y)
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
+        pass
 
     def update(self):
         server.gate_open = False
@@ -60,14 +63,14 @@ class mGate1:   # middlemap gate
 
     def __init__(self):
         if self.image == None:
-            self.image = load_image('gate1.png')
+            self.image = load_image('./resource/sprites/gate1.png')
         self.x, self.y, = 1920, 300
 
     def draw(self):
         cx = self.x - 15 - server.map.window_left
         if server.enemy_count == 0:
             self.image.draw(cx, self.y + 10, 390.5, 266.2)  # 355, 242
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
 
     def update(self):
         server.gate_open = False
@@ -88,14 +91,14 @@ class mGate2:   # middlemap gate
 
     def __init__(self):
         if self.image == None:
-            self.image = load_image('gate2.png')
+            self.image = load_image('./resource/sprites/gate2.png')
         self.x, self.y, = 2520, 300
 
     def draw(self):
         cx = self.x - server.map.window_left
         if server.enemy_count == 0:
             self.image.draw(cx, self.y + 10, 390.5, 266.2)  # 355, 242
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
 
     def update(self):
         server.gate_open = False
@@ -117,14 +120,14 @@ class bGate:   # bossmap gate
 
     def __init__(self):
         if self.image == None:
-            self.image = load_image('gate1.png')
+            self.image = load_image('./resource/sprites/gate1.png')
         self.x, self.y, = 1930, 500
 
     def draw(self):
         cx = self.x - 20 - server.map.window_left
         if server.enemy_count == 0:
             self.image.draw(cx, self.y + 10, 390.5, 266.2)  # 355, 242
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
 
     def update(self):
         pass

@@ -1,23 +1,27 @@
 from pico2d import *
-
+import title_music
 import game_framework
 import stage_start
+import game_world
 
 image = None
+music = None
 
 def enter():
-    global image
-    image = load_image('Title_Art.png')
+    global image, music
+    music = title_music.title()
+    game_world.add_object(music, 0)
+    image = load_image('./resource/sprites/Title_Art.png')
     pass
 
 def exit():
     global image
     del image
+    game_world.clear()
     pass
 
 def update():
-   pass
-
+    pass
 
 def draw():
     clear_canvas()

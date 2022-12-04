@@ -1,5 +1,4 @@
 from pico2d import *
-import chdir
 import server
 import gate
 
@@ -8,7 +7,7 @@ class Map_floor1:
        pass
 
     def draw(self):
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
         pass
 
     def update(self):
@@ -26,7 +25,7 @@ class Map_floor2:
        pass
 
     def draw(self):
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
         pass
 
     def update(self):
@@ -41,7 +40,10 @@ class Map_floor2:
 
 class Map:  # middleMap
     def __init__(self):
-        self.image = load_image('Skulmap_middle.png')
+        self.image = load_image('./resource/sprites/Skulmap_middle.png')
+        self.bgm = load_music('./resource/AudioClip/Chapter1.wav')
+        self.bgm.set_volume(32)
+        self.bgm.repeat_play()
         self.canvas_width = get_canvas_width()
         self.canvas_height = get_canvas_height()
         self.w = self.image.w
@@ -50,7 +52,7 @@ class Map:  # middleMap
 
     def draw(self):
         self.image.clip_draw_to_origin(self.window_left, 0 , self.canvas_width, self.canvas_height, 0, 0)
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
 
     def update(self):
         self.window_left = clamp(0, int(server.skul.x) - self.canvas_width // 2, self.w - self.canvas_width)
@@ -65,7 +67,10 @@ class Map:  # middleMap
 
 class startMap:
     def __init__(self):
-        self.image = load_image('startmap.png')
+        self.image = load_image('./resource/sprites/startmap.png')
+        self.bgm = load_music('./resource/AudioClip/Chapter1.wav')
+        self.bgm.set_volume(32)
+        self.bgm.repeat_play()
         self.canvas_width = get_canvas_width()
         self.canvas_height = get_canvas_height()
         self.w = self.image.w
@@ -74,7 +79,7 @@ class startMap:
 
     def draw(self):
         self.image.clip_draw_to_origin(self.window_left, 0 , self.canvas_width, self.canvas_height, 0, 0)
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
 
     def update(self):
         self.window_left = clamp(0, int(server.skul.x) - self.canvas_width // 2, self.w - self.canvas_width)
@@ -89,7 +94,10 @@ class startMap:
 
 class bossMap:
     def __init__(self):
-        self.image = load_image('bossmap.png')
+        self.image = load_image('./resource/sprites/bossmap.png')
+        self.bgm = load_music('./resource/AudioClip/Adventurer.wav')
+        self.bgm.set_volume(32)
+        self.bgm.repeat_play()
         self.canvas_width = get_canvas_width()
         self.canvas_height = get_canvas_height()
         self.w = self.image.w
@@ -97,8 +105,8 @@ class bossMap:
         # self.image = load_image('skulmap_middle.png')
 
     def draw(self):
-        self.image.clip_draw_to_origin(self.window_left, 0 , self.canvas_width, self.canvas_height, 0, 0)
-        draw_rectangle(*self.get_bb())
+        self.image.clip_draw_to_origin(self.window_left, 0, self.canvas_width, self.canvas_height, 0, 0)
+        #draw_rectangle(*self.get_bb())
 
     def update(self):
         self.window_left = clamp(0, int(server.skul.x) - self.canvas_width // 2, self.w - self.canvas_width)
@@ -117,7 +125,7 @@ class bossMap_floor1:
        pass
 
     def draw(self):
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
         pass
 
     def update(self):
@@ -136,7 +144,7 @@ class bossMap_floor2:
        pass
 
     def draw(self):
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
         pass
 
     def update(self):
@@ -155,7 +163,7 @@ class bossMap_floor3:
        pass
 
     def draw(self):
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
         pass
 
     def update(self):

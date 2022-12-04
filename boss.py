@@ -50,15 +50,19 @@ class Boss:  # boss +161%
         self.timer = 1.0
         self.wait_timer = 2.0
         self.frame = 0
-        self.image = load_image('enemy.png')
+        self.image = load_image('./resource/sprites/enemy.png')
+        self.attack_sound = load_wav('./resource/AudioClip/boss_attack.wav')
+        self.attack_sound.set_volume(15)
+        self.hit_sound = load_wav('./resource/AudioClip/Hit_sound.wav')
+        self.hit_sound.set_volume(3)
         for i in range(1, 8):
-            boss_run_image.append(load_image('boss_run_' + '%d' % i + '.png'))
+            boss_run_image.append(load_image('./resource/sprites/boss_run_' + '%d' % i + '.png'))
         for i in range(16):
-            boss_hp_bar.append(load_image('boss_hp_bar' + '%d' % i + '.png'))
+            boss_hp_bar.append(load_image('./resource/sprites/boss_hp_bar' + '%d' % i + '.png'))
         for i in range(1, 5):
-            boss_attack_image.append(load_image('boss_attack' + '%d' % i + '.png'))
+            boss_attack_image.append(load_image('./resource/sprites/boss_attack' + '%d' % i + '.png'))
         for i in range(1, 3):
-            boss_charge_image.append(load_image('boss_charge' + '%d' % i + '.png'))
+            boss_charge_image.append(load_image('./resource/sprites/boss_charge' + '%d' % i + '.png'))
         self.item = None
         self.build_behavior_tree()
 
@@ -204,16 +208,20 @@ class Boss:  # boss +161%
         self.x += self.speed * math.cos(self.dir) * game_framework.frame_time
         if int(self.frame) > 5 and attack_target == True and math.cos(
                 self.dir) > 0:  # 충돌 객체 추가해 handle_collision에서 처리하고 싶으나 오류가 자꾸 생겨서 일단 update 에서 처리
+            self.attack_sound.play()
             cx = self.x - server.map.window_left
             dx = server.skul.x - server.map.window_left
             if not (dx - 33 > cx + 100) and not (dx + 28 < cx - 37) and not (server.skul.y + 30 < self.y - 80) and not (
                     server.skul.y - 30 > self.y + 82):
+                self.hit_sound.play()
                 server.skul_attacked = True
         elif int(self.frame) > 5 and attack_target == True and math.cos(self.dir) <= 0:
+            self.attack_sound.play()
             cx = self.x - server.map.window_left
             dx = server.skul.x - server.map.window_left
             if not (dx - 33 > cx + 37) and not (dx + 28 < cx - 100) and not (server.skul.y + 30 < self.y - 80) and not (
                     server.skul.y - 30 > self.y + 82):
+                self.hit_sound.play()
                 server.skul_attacked = True
         if charge_target == True and math.cos(
                 self.dir) > 0:  # 충돌 객체 추가해 handle_collision에서 처리하고 싶으나 오류가 자꾸 생겨서 일단 update 에서 처리
@@ -221,12 +229,14 @@ class Boss:  # boss +161%
             dx = server.skul.x - server.map.window_left
             if not (dx - 33 > cx + 100) and not (dx + 28 < cx - 37) and not (server.skul.y + 30 < self.y - 80) and not (
                     server.skul.y - 30 > self.y + 82):
+                self.hit_sound.play()
                 server.skul_power_attacked = True
         elif charge_target == True and math.cos(self.dir) <= 0:
             cx = self.x - server.map.window_left
             dx = server.skul.x - server.map.window_left
             if not (dx - 33 > cx + 37) and not (dx + 28 < cx - 100) and not (server.skul.y + 30 < self.y - 80) and not (
                     server.skul.y - 30 > self.y + 82):
+                self.hit_sound.play()
                 server.skul_power_attacked = True
         if server.skul_attacked:  # server.skul.hp 는 스테이지별로 따로 적용되서 skul.hp값을 다음 스테이지로 넘겨주거나 server에 skul_hp를 만들어주거나 해야할것같음(수정필요)
             server.skul_hp -= 0.1 * 4.0  # 보스니까 공격력 더 강함
@@ -249,7 +259,7 @@ class Boss:  # boss +161%
                 boss_attack_image[1].draw(cx, self.y)
             else:
                 boss_attack_image[int(self.frame) - 3].draw(cx, self.y)
-                draw_rectangle(*self.get_boss_attack_bb())
+                #draw_rectangle(*self.get_boss_attack_bb())
         elif math.cos(self.dir) < 0 and attack_target == True:
             if int(self.frame) < 2:
                 boss_attack_image[0].clip_composite_draw(0, 0, 180, 180, 0, 'h', cx, self.y)
@@ -257,7 +267,7 @@ class Boss:  # boss +161%
                 boss_attack_image[1].clip_composite_draw(0, 0, 180, 180, 0, 'h', cx, self.y)
             else:
                 boss_attack_image[int(self.frame) - 3].clip_composite_draw(0, 0, 180, 180, 0, 'h', cx, self.y)
-                draw_rectangle(*self.get_boss_attack_bb())
+                #draw_rectangle(*self.get_boss_attack_bb())
         elif math.cos(self.dir) < 0 and charge_target == True:
             boss_charge_image[1].clip_composite_draw(0, 0, 180, 180, 0, 'h', cx, self.y)
         elif math.cos(self.dir) >= 0 and charge_target == True:
@@ -308,7 +318,7 @@ class Boss:  # boss +161%
             # boss_hp_bar[0].draw(server.map.canvas_width // 2, server.map.h - 50, 770, 62.5)
             game_world.remove_object(server.boss)
             server.enemy_count -= 1
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
 
     def handle_events(self):
         pass

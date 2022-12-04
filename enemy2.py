@@ -27,7 +27,8 @@ Enemy_hp_bar = []
 
 class Enemy:
     def prepare_patrol_points(self):
-        positions = [(1250, 405), (1350, 405), (1450, 405), (1550, 405), (1650, 405), (1750, 405)]
+        positions = [(1250, 405), (1350, 405), (1450, 405), (1550, 405), (1650, 405), (1750, 405), (1650, 405),
+                     (1550, 405), (1450, 405), (1350, 405)]
         self.patrol_points = []
         for p in positions:
             self.patrol_points.append((p[0], p[1]))
@@ -41,13 +42,15 @@ class Enemy:
         self.timer = 1.0
         self.wait_timer = 2.0
         self.frame = 0
-        self.image = load_image('enemy.png')
+        self.image = load_image('./resource/sprites/enemy.png')
+        self.attack_sound = load_wav('./resource/AudioClip/heavy_sword_attack.wav')
+        self.attack_sound.set_volume(10)
         for i in range(1, 9):
-            Enemy_run_image.append(load_image('enemy_run_' + '%d' % i + '.png'))
+            Enemy_run_image.append(load_image('./resource/sprites/enemy_run_' + '%d' % i + '.png'))
         for i in range(5):
-            Enemy_attack_image.append(load_image('enemy_attack' + '%d' % i + '.png'))
+            Enemy_attack_image.append(load_image('./resource/sprites/enemy_attack' + '%d' % i + '.png'))
         for i in range(13):
-            Enemy_hp_bar.append(load_image('enemy_hp_bar' + '%d' % i + '.png'))
+            Enemy_hp_bar.append(load_image('./resource/sprites/enemy_hp_bar' + '%d' % i + '.png'))
         self.item = None
         self.build_behavior_tree()
 
@@ -70,7 +73,8 @@ class Enemy:
 
     def find_player(self):
         distance = (server.skul.x - self.x) ** 2 + (server.skul.y - self.y) ** 2
-        if distance < (PIXEL_PER_METER * 20) ** 2 and self.y + 60 > server.skul.y > self.y - 60:  # 20미터 이내의 플레이어 감지, 자신의 y값보다 높으면 감지 못함
+        if distance < (
+                PIXEL_PER_METER * 20) ** 2 and self.y + 60 > server.skul.y > self.y - 60:  # 20미터 이내의 플레이어 감지, 자신의 y값보다 높으면 감지 못함
             return BehaviorTree.SUCCESS
         else:
             self.speed = 0
@@ -104,7 +108,7 @@ class Enemy:
         global attack_target
         distance = abs(server.skul.x - self.x)
         if distance < PIXEL_PER_METER * 1.5:
-            #print('ATTACK')
+            # print('ATTACK')
             self.speed = 0
             attack_target = True
             return BehaviorTree.SUCCESS
@@ -144,12 +148,16 @@ class Enemy:
         self.bt.run()
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % FRAMES_PER_ACTION
         self.x += self.speed * math.cos(self.dir) * game_framework.frame_time
-        if int(self.frame) > 4 and attack_target == True and math.cos(self.dir) > 0:  # 충돌 객체 추가해 handle_collision에서 처리하고 싶으나 오류가 자꾸 생겨서 일단 update 에서 처리
+        if int(self.frame) > 4 and attack_target == True and math.cos(
+                self.dir) > 0:  # 충돌 객체 추가해 handle_collision에서 처리하고 싶으나 오류가 자꾸 생겨서 일단 update 에서 처리
+            self.attack_sound.play()
             cx = self.x - server.map.window_left
             dx = server.skul.x - server.map.window_left
-            if not(dx - 33 > cx + 70) and not(dx + 28 < cx - 27) and not(server.skul.y + 30 < self.y - 30) and not(server.skul.y - 30 > self.y + 47):
+            if not (dx - 33 > cx + 70) and not (dx + 28 < cx - 27) and not (server.skul.y + 30 < self.y - 30) and not (
+                    server.skul.y - 30 > self.y + 47):
                 server.skul_attacked = True
         elif int(self.frame) > 4 and attack_target == True and math.cos(self.dir) <= 0:
+            self.attack_sound.play()
             cx = self.x - server.map.window_left
             dx = server.skul.x - server.map.window_left
             if not (dx - 33 > cx + 27) and not (dx + 28 < cx - 70) and not (server.skul.y + 30 < self.y - 30) and not (
@@ -170,13 +178,13 @@ class Enemy:
                 Enemy_attack_image[0].draw(cx, self.y)
             else:
                 Enemy_attack_image[int(self.frame) - 3].draw(cx, self.y)
-                draw_rectangle(*self.get_enemy_attack_bb())
+                #draw_rectangle(*self.get_enemy_attack_bb())
         elif math.cos(self.dir) < 0 and attack_target == True:
             if int(self.frame) < 4:
                 Enemy_attack_image[0].clip_composite_draw(0, 0, 103, 103, 0, 'h', cx, self.y)
             else:
                 Enemy_attack_image[int(self.frame) - 3].clip_composite_draw(0, 0, 103, 103, 0, 'h', cx, self.y)
-                draw_rectangle(*self.get_enemy_attack_bb())
+                #draw_rectangle(*self.get_enemy_attack_bb())
         elif math.cos(self.dir) < 0:
             # self.image.clip_composite_draw(0, 0, 60, 90, 0, 'h', cx, self.y)
             Enemy_run_image[int(self.frame)].clip_composite_draw(0, 0, 90, 90, 0, 'h', cx, self.y)
@@ -214,7 +222,7 @@ class Enemy:
         if self.hp <= 0:
             game_world.remove_object(server.enemy2)
             server.enemy_count -= 1
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
 
     def handle_events(self):
         pass

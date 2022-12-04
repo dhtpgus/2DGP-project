@@ -1,10 +1,8 @@
 from pico2d import *
-import chdir
 import game_world
 import game_framework
 import server
 import enemy
-from skul_attack import Skul_Attack
 
 RD, LD, RU, LU, TIMER, SPACE, XD, XU = range(8)
 event_name = ['RD', 'LD', 'RU', 'LU', 'TIMER', 'SPACE', 'XD', 'XU']
@@ -31,6 +29,7 @@ class IDLE:
             pass
         elif event == XD:
             attack = True
+            skul.attack_sound1.play()
         elif event == XU:
             attack = False
         skul.dir = 0
@@ -101,14 +100,17 @@ class RUN:
             skul.dir += 1
         elif event == SPACE:
             if jumped_count < 2:
+                skul.jump_sound.play()
                 jumped = True
                 falling = False
                 jumped_count += 1
             pass
         elif event == XD:
             attack = True
+            skul.attack_sound1.play()
         elif event == XU:
             attack = False
+
 
     def exit(skul, event):
         skul.face_dir = skul.dir
@@ -180,6 +182,12 @@ next_state = {
 
 class Skul:
     def __init__(self):
+        self.attack_sound1 = load_wav('./resource/AudioClip/Skul_Atk 1.wav')
+        self.attack_sound1.set_volume(20)
+        self.jump_sound = load_wav('./resource/AudioClip/Imp_jump 3.wav')
+        self.jump_sound.set_volume(30)
+        self.hit_sound = load_wav('./resource/AudioClip/Hit_sound.wav')
+        self.hit_sound.set_volume(3)
         self.x, self.y = 300, 1000
         self.frame = 0
         self.dir, self.face_dir = 0, 1
@@ -187,16 +195,16 @@ class Skul:
         self.event_que = []
         self.cur_state = IDLE
         self.cur_state.enter(self, None)
-        self.image = load_image('skulwalk2.png')
-        self.idle_image = load_image('skulidle2.png')
-        self.jump_image = load_image('skuljump2.png')
-        self.falling_image = load_image('skulfall2.png')
+        self.image = load_image('./resource/sprites/skulwalk2.png')
+        self.idle_image = load_image('./resource/sprites/skulidle2.png')
+        self.jump_image = load_image('./resource/sprites/skuljump2.png')
+        self.falling_image = load_image('./resource/sprites/skulfall2.png')
         for i in range(1, 9):
-            attackR_images.append(load_image('attack_' + '%d' % i + '.png'))
+            attackR_images.append(load_image('./resource/sprites/attack_' + '%d' % i + '.png'))
         for i in range(1, 9):
-            attackL_images.append(load_image('attackL_' + '%d' % i + '.png'))
+            attackL_images.append(load_image('./resource/sprites/attackL_' + '%d' % i + '.png'))
         for i in range(12):
-            skul_hp_bar.append(load_image('hp_bar_' + '%d' % i + '.png'))
+            skul_hp_bar.append(load_image('./resource/sprites/hp_bar_' + '%d' % i + '.png'))
 
         self.item = None
 
@@ -222,12 +230,14 @@ class Skul:
                 dx = server.enemy.x - server.map.window_left  # enemy 위치
                 if not (dx - 30 > cx + 50) and not (dx + 30 < cx - 47) and not (
                         server.enemy.y + 47 < self.y - 30) and not (server.enemy.y - 45 > self.y + 30):
+                    self.hit_sound.play()
                     server.enemy_attacked = True
             elif attack == True and self.face_dir == -1:
                 cx = self.x - server.map.window_left  # 내 위치
                 dx = server.enemy.x - server.map.window_left  # enemy 위치
                 if not (dx - 30 > cx + 47) and not (dx + 30 < cx - 50) and not (
                         server.enemy.y + 47 < self.y - 30) and not (server.enemy.y - 45 > self.y + 30):
+                    self.hit_sound.play()
                     server.enemy_attacked = True
             if server.enemy_attacked:
                 server.enemy.hp -= 0.1
@@ -238,12 +248,14 @@ class Skul:
                 dx = server.enemy2.x - server.map.window_left  # enemy 위치
                 if not (dx - 30 > cx + 50) and not (dx + 30 < cx - 47) and not (
                         server.enemy2.y + 47 < self.y - 30) and not (server.enemy2.y - 45 > self.y + 30):
+                    self.hit_sound.play()
                     server.enemy2_attacked = True
             elif attack == True and self.face_dir == -1:
                 cx = self.x - server.map.window_left  # 내 위치
                 dx = server.enemy2.x - server.map.window_left  # enemy 위치
                 if not (dx - 30 > cx + 47) and not (dx + 30 < cx - 50) and not (
                         server.enemy2.y + 47 < self.y - 30) and not (server.enemy2.y - 45 > self.y + 30):
+                    self.hit_sound.play()
                     server.enemy2_attacked = True
             if server.enemy2_attacked:
                 server.enemy2.hp -= 0.1
@@ -254,12 +266,14 @@ class Skul:
                 dx = server.enemy3.x - server.map.window_left  # enemy 위치
                 if not (dx - 30 > cx + 50) and not (dx + 30 < cx - 47) and not (
                         server.enemy3.y + 47 < self.y - 30) and not (server.enemy3.y - 45 > self.y + 30):
+                    self.hit_sound.play()
                     server.enemy3_attacked = True
             elif attack == True and self.face_dir == -1:
                 cx = self.x - server.map.window_left  # 내 위치
                 dx = server.enemy3.x - server.map.window_left  # enemy 위치
                 if not (dx - 30 > cx + 47) and not (dx + 30 < cx - 50) and not (
                         server.enemy3.y + 47 < self.y - 30) and not (server.enemy3.y - 45 > self.y + 30):
+                    self.hit_sound.play()
                     server.enemy3_attacked = True
             if server.enemy3_attacked:
                 server.enemy3.hp -= 0.1
@@ -271,12 +285,14 @@ class Skul:
                 dx = server.boss.x - server.map.window_left  # enemy 위치
                 if not (dx - 78 > cx + 50) and not (dx + 78 < cx - 47) and not (
                         server.boss.y + 70 < self.y - 30) and not (server.boss.y - 78 > self.y + 30):
+                    self.hit_sound.play()
                     server.boss_attacked = True
             elif attack == True and self.face_dir == -1:
                 cx = self.x - server.map.window_left  # 내 위치
                 dx = server.boss.x - server.map.window_left  # enemy 위치
                 if not (dx - 78 > cx + 47) and not (dx + 78 < cx - 50) and not (
                         server.boss.y + 70 < self.y - 30) and not (server.boss.y - 78 > self.y + 30):
+                    self.hit_sound.play()
                     server.boss_attacked = True
             if server.boss_attacked:
                 server.boss.hp -= 0.1 / 2.0  # 보스의 경우 들어가는 데미지 감소
@@ -286,9 +302,10 @@ class Skul:
 
     def draw(self):
         self.cur_state.draw(self)
-        draw_rectangle(*self.get_bb())  # tuple 값을 나눠서 인자로 분배하기위해 * 을 사용
+        #draw_rectangle(*self.get_bb())  # tuple 값을 나눠서 인자로 분배하기위해 * 을 사용
         if attack:
-            draw_rectangle(*self.get_attack_bb())
+            #draw_rectangle(*self.get_attack_bb())
+            pass
         if server.skul_hp == 100:
             skul_hp_bar[11].draw(200, 90)
         elif 96 < server.skul_hp < 100:

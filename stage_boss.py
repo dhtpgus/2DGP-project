@@ -1,12 +1,13 @@
 from pico2d import *
 import game_framework
-import chdir
 from skul import Skul
 from skul import attack
 import skul
 import map
 from enemy import Enemy
 import game_world
+import gameover_state
+import ending_state
 import title_state
 import item_state
 import server
@@ -28,8 +29,9 @@ def handle_events():
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_p):
             game_framework.push_state(item_state)
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_f):
+            game_framework.change_state(ending_state)
             pass  # 엔딩 출력
-            # game_framework.change_state(play_state)
+            #
         else:
             server.skul.handle_event(event)
 
@@ -66,9 +68,8 @@ def exit():
 
 
 def update():
-    if server.enemy_count == 0:
-        print('open door')
-        pass
+    if server.skul_hp <= 0:
+        game_framework.change_state(gameover_state)
     skul.falling = True
     for game_object in game_world.all_objects():
         game_object.update()
